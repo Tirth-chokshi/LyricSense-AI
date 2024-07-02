@@ -4,7 +4,7 @@ import { checkOptions } from './helpers/index.js';
 /**
  * @param {{apiKey: string, title: string, artist: string, optimizeQuery: boolean}} options
  */
-export default async function (options) {
+export default async function getSong(options) {
     try {
         checkOptions(options);
         let results = await searchSong(options);
@@ -20,4 +20,5 @@ export default async function (options) {
     } catch (e) {
         throw e;
     }
-};
+}
+

@@ -5,7 +5,7 @@ import extractLyrics from './helpers/extractLyrics.js';
 /**
  * @param {({apiKey: string, title: string, artist: string, optimizeQuery: boolean}|string)} arg - options object, or Genius URL
  */
-export default async function (arg) {
+export default async function getLyrics(arg) {
     try {
         if (arg && typeof arg === 'string') {
             let lyrics = await extractLyrics(arg);
@@ -22,4 +22,5 @@ export default async function (arg) {
     } catch (e) {
         throw e;
     }
-};
+}
+
