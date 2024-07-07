@@ -34,7 +34,7 @@ export default function Home() {
       setLoading(false);
     }
   };
-  
+
   const { setTheme } = useTheme();
 
   return (
