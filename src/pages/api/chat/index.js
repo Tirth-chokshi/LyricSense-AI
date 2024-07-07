@@ -1,5 +1,6 @@
 import { getGroqChatCompletion } from "@/lib/action";
 import getLyrics from "@/misc/getLyrics";
+import getYoutubeVideo from "@/misc/getYtVideo";
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -15,9 +16,10 @@ export default async function handler(req, res) {
       if (!lyrics) {
         return res.status(404).json({ error: 'Lyrics not found' });
       }
-      const prompt = `Analyze these lyrics: ${lyrics}`;
+      const prompt = `act as an ai tool that breaks down song lyrics to revel the insights and emotions of song, how this song makes you feel happy, exited or sad : ${lyrics}`;
       const chatCompletion = await getGroqChatCompletion(prompt);
-      res.status(200).json({ response: chatCompletion.choices[0].message.content });
+      const youtubeUrl = await getYoutubeVideo(songTitle, artistName);
+      res.status(200).json({ response: chatCompletion.choices[0].message.content, youtubeUrl });
     } catch (error) {
       console.error('Error fetching data:', error);
       res.status(500).json({ error: 'Error fetching data' });

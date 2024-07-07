@@ -17,6 +17,7 @@ export default function Home() {
   const [songTitle, setSongTitle] = useState('');
   const [artistName, setArtistName] = useState('');
   const [response, setResponse] = useState('');
+  const [youtubeUrl, setYoutubeUrl] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -25,6 +26,7 @@ export default function Home() {
     try {
       const res = await axios.post('/api/chat', { songTitle, artistName });
       setResponse(res.data.response);
+      setYoutubeUrl(res.data.youtubeUrl);
     } catch (error) {
       console.error('Error fetching data:', error);
       setResponse('Error fetching data');
@@ -32,11 +34,11 @@ export default function Home() {
       setLoading(false);
     }
   };
-
+  
   const { setTheme } = useTheme();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="relative container mx-auto p-4">
       <div className="absolute top-4 right-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -59,36 +61,49 @@ export default function Home() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-        <h1 className="text-2xl font-bold text-center mb-4">Lyric Interpreter</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            type="text"
-            value={songTitle}
-            onChange={(e) => setSongTitle(e.target.value)}
-            placeholder="Enter song title"
-            className="w-full"
-          />
-          <Input
-            type="text"
-            value={artistName}
-            onChange={(e) => setArtistName(e.target.value)}
-            placeholder="Enter artist name"
-            className="w-full"
-          />
-          <Button type="submit" variant="outline" className="w-full">Submit</Button>
-        </form>
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold">Interpretation :</h2>
-          <div className="prose dark:prose-dark space-y-4">
-            {loading ? (
-              <div className="flex justify-center items-center">
-                <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
-              </div>
-            ) : (
+      <h1 className="text-2xl font-bold mb-4">LyricSense AI</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <Input
+          type="text"
+          value={songTitle}
+          onChange={(e) => setSongTitle(e.target.value)}
+          placeholder="Enter song title"
+          className="w-full"
+        />
+        <Input
+          type="text"
+          value={artistName}
+          onChange={(e) => setArtistName(e.target.value)}
+          placeholder="Enter artist name"
+          className="w-full"
+        />
+        <Button type="submit" variant="outline" className="w-full">Submit</Button>
+      </form>
+      <div className="mt-6">
+        <h2 className="text-xl font-semibold">Interpretation :</h2>
+        <div className="prose dark:prose-dark space-y-4">
+          {loading ? (
+            <div className="flex justify-center items-center">
+              <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
+            </div>
+          ) : (
+            <>
               <ReactMarkdown>{response}</ReactMarkdown>
-            )}
-          </div>
+              {youtubeUrl && (
+                <div className="mt-4 flex justify-center">
+                  <iframe
+                    width="560"
+                    height="315"
+                    src={youtubeUrl}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>
