@@ -96,6 +96,7 @@ export default function Home() {
             </div>
           ) : (
             <>
+              <Keywords keywords={keywordsResponse} />
               {youtubeUrl && (
                 <div className="mt-4 flex justify-center">                  
                   <iframe
@@ -109,7 +110,6 @@ export default function Home() {
                   ></iframe>
                 </div>
               )}
-              <Keywords keywords={keywordsResponse} />
               <Analysis analysis={analysisResponse} />
             </>
           )}
