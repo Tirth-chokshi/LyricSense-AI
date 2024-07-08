@@ -7,7 +7,6 @@ const Keywords = ({ keywords }) => {
   return (
     <Card>
       <CardHeader>
-        {/* <h2 className="text-xl font-semibold">Keywords Response</h2> */}
       </CardHeader>
       <CardContent>
         <ReactMarkdown>
