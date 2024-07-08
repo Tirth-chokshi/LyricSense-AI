@@ -8,7 +8,7 @@ const Analysis = ({ analysis }) => {
   return (
     <Card>
       <CardHeader>
-        <h2 className="text-xl font-semibold">Analysis Response</h2>
+        {/* <h2 className="text-xl font-semibold">Analysis Response</h2> */}
       </CardHeader>
       <CardContent>
         <ReactMarkdown>

@@ -8,7 +8,7 @@ export default async function handler(req, res) {
       const options = {
         apiKey: process.env.LYRIC_API,
         title: songTitle,
-        artist: artistName,
+        artist: artistName+' ',
         optimizeQuery: true
       };
       const analysisPrompt = process.env.ANALYSIS_PROMPT

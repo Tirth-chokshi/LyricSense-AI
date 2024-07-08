@@ -75,7 +75,7 @@ export default function Home() {
           type="text"
           value={songTitle}
           onChange={(e) => setSongTitle(e.target.value)}
-          placeholder="Enter song title"
+          placeholder="Enter song title (optional)"
           className="w-full"
         />
         <Input
