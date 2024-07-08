@@ -5,14 +5,14 @@ import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Keywords from "@/components/Keywords";
+import Analysis from "@/components/Analysis";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import Keywords from "@/components/Keywords";
-import Analysis from "@/components/Analysis";
 
 export default function Home() {
   const [songTitle, setSongTitle] = useState('');
