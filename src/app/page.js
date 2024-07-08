@@ -75,14 +75,14 @@ export default function Home() {
           type="text"
           value={songTitle}
           onChange={(e) => setSongTitle(e.target.value)}
-          placeholder="Enter song title (optional)"
+          placeholder="Enter song title"
           className="w-full"
         />
         <Input
           type="text"
           value={artistName}
           onChange={(e) => setArtistName(e.target.value)}
-          placeholder="Enter artist name"
+          placeholder="Enter artist name (optional)"
           className="w-full"
         />
         <Button type="submit" variant="outline" className="w-full">Submit</Button>
