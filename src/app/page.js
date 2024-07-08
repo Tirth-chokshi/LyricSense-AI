@@ -88,7 +88,7 @@ export default function Home() {
         <Button type="submit" variant="outline" className="w-full">Submit</Button>
       </form>
       <div className="mt-6">
-        <h2 className="text-xl font-semibold">Interpretation :</h2>
+        <h2 className="text-xl flex justify-center mb-4 font-semibold">Interpretation :</h2>
         <div className="prose dark:prose-dark space-y-4">
           {loading ? (
             <div className="flex justify-center items-center">
