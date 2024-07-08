@@ -97,8 +97,7 @@ export default function Home() {
           ) : (
             <>
               {youtubeUrl && (
-                <div className="mt-4 flex justify-center">
-                  <h1>Golden Minute</h1>
+                <div className="mt-4 flex justify-center">                  
                   <iframe
                     width="560"
                     height="315"
