@@ -1,7 +1,6 @@
 "use client";
 import { useState } from 'react';
 import axios from 'axios';
-import ReactMarkdown from 'react-markdown';
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useTheme } from "next-themes";
 import { Input } from "@/components/ui/input";
@@ -97,10 +96,9 @@ export default function Home() {
             </div>
           ) : (
             <>
-              <Keywords keywords={keywordsResponse} />
-              <Analysis analysis={analysisResponse} />
               {youtubeUrl && (
                 <div className="mt-4 flex justify-center">
+                  <h1>Golden Minute</h1>
                   <iframe
                     width="560"
                     height="315"
@@ -112,6 +110,8 @@ export default function Home() {
                   ></iframe>
                 </div>
               )}
+              <Keywords keywords={keywordsResponse} />
+              <Analysis analysis={analysisResponse} />
             </>
           )}
         </div>

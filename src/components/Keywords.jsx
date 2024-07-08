@@ -1,9 +1,8 @@
-// src/components/Keywords.jsx
 "use client";
 
 import React from 'react';
-import { Card,CardContent,CardHeader,CardFooter } from './ui/card';
-
+import { Card, CardContent, CardHeader, CardFooter } from './ui/card';
+import ReactMarkdown from 'react-markdown';
 const Keywords = ({ keywords }) => {
   return (
     <Card>
@@ -11,7 +10,9 @@ const Keywords = ({ keywords }) => {
         <h2 className="text-xl font-semibold">Keywords Response</h2>
       </CardHeader>
       <CardContent>
-        <p>{keywords}</p>
+        <ReactMarkdown>
+          {keywords}
+        </ReactMarkdown>
       </CardContent>
     </Card>
   );
