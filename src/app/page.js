@@ -12,11 +12,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import Keywords from "@/components/Keywords";
+import Analysis from "@/components/Analysis";
 
 export default function Home() {
   const [songTitle, setSongTitle] = useState('');
   const [artistName, setArtistName] = useState('');
-  const [response, setResponse] = useState('');
+  const [keywordsResponse, setKeywordsResponse] = useState('');
+  const [analysisResponse, setAnalysisResponse] = useState('');
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -24,12 +27,18 @@ export default function Home() {
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await axios.post('/api/chat', { songTitle, artistName });
-      setResponse(res.data.response);
-      setYoutubeUrl(res.data.youtubeUrl);
+      const [keywordsRes, analysisRes] = await Promise.all([
+        axios.post('/api/keywords', { songTitle, artistName }),
+        axios.post('/api/analysis', { songTitle, artistName })
+      ]);
+
+      setKeywordsResponse(keywordsRes.data.response);
+      setAnalysisResponse(analysisRes.data.response);
+      setYoutubeUrl(keywordsRes.data.youtubeUrl);
     } catch (error) {
       console.error('Error fetching data:', error);
-      setResponse('Error fetching data');
+      setKeywordsResponse('Error fetching data');
+      setAnalysisResponse('Error fetching data');
     } finally {
       setLoading(false);
     }
@@ -88,7 +97,8 @@ export default function Home() {
             </div>
           ) : (
             <>
-              <ReactMarkdown>{response}</ReactMarkdown>
+              <Keywords keywords={keywordsResponse} />
+              <Analysis analysis={analysisResponse} />
               {youtubeUrl && (
                 <div className="mt-4 flex justify-center">
                   <iframe

@@ -1,6 +1,5 @@
 import { getGroqChatCompletion } from "@/lib/action";
 import getLyrics from "@/misc/getLyrics";
-import getYoutubeVideo from "@/misc/getYtVideo";
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -12,18 +11,14 @@ export default async function handler(req, res) {
         artist: artistName,
         optimizeQuery: true
       };
-      const keywordPrompt = process.env.KEYWORD_PROMPT;
       const analysisPrompt = process.env.ANALYSIS_PROMPT
-      const langPrompt = process.env.LANG_PROMPT
-
       const lyrics = await getLyrics(options);
       if (!lyrics) {
         return res.status(404).json({ error: 'Lyrics not found' });
       }
-      const prompt = `${keywordPrompt} ${lyrics}`;
-      const chatCompletion = await getGroqChatCompletion(prompt);
-      const youtubeUrl = await getYoutubeVideo(songTitle, artistName);
-      res.status(200).json({ response: chatCompletion.choices[0].message.content, youtubeUrl });
+      const prompt = `${analysisPrompt} ${lyrics}`;
+      const chatCompletion = await getGroqChatCompletion(prompt);      
+      res.status(200).json({ response: chatCompletion.choices[0].message.content });
     } catch (error) {
       console.error('Error fetching data:', error);
       res.status(500).json({ error: 'Error fetching data' });

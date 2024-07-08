@@ -13,8 +13,6 @@ export default async function handler(req, res) {
         optimizeQuery: true
       };
       const keywordPrompt = process.env.KEYWORD_PROMPT;
-      const analysisPrompt = process.env.ANALYSIS_PROMPT
-      const langPrompt = process.env.LANG_PROMPT
 
       const lyrics = await getLyrics(options);
       if (!lyrics) {

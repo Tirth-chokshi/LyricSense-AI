@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -49,6 +51,8 @@
   }
 }
 
+
+
 .loader {
   width: 48px;
   height: 48px;
@@ -93,4 +97,17 @@
   50% {
     transform: scale(1) translate(-50%, -50%);
   }
+}
+.input {
+  @apply border p-2 mb-4 w-full;
+}
+
+.button {
+  @apply bg-blue-500 text-white p-2 rounded;
+}
+
+.summary-component,
+.moods-themes-component,
+.language-explicit-component {
+  @apply border p-4 mb-4;
 }
