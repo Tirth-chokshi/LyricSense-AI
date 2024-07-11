@@ -9,9 +9,9 @@ const Keywords = ({ keywords }) => {
       <CardHeader>
       </CardHeader>
       <CardContent>
-        <ReactMarkdown>
+        {/* <ReactMarkdown> */}
           {keywords}
-        </ReactMarkdown>
+        {/* </ReactMarkdown> */}
       </CardContent>
     </Card>
   );

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import Keywords from "@/components/Keywords";
 import Analysis from "@/components/Analysis";
 import ChatInterface from '@/components/ChatInterface';
+import EmotionGraph from '@/components/EmotionGraph';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +22,7 @@ export default function Home() {
   const [keywordsResponse, setKeywordsResponse] = useState('');
   const [analysisResponse, setAnalysisResponse] = useState('');
   const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [moodsAndThemes, setMoodsAndThemes] = useState(null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -32,14 +34,19 @@ export default function Home() {
     setSubmitted(false);
 
     try {
+      console.log('Submitting form with:', { songTitle, artistName });
       const [keywordsRes, analysisRes] = await Promise.all([
         axios.post('/api/keywords', { songTitle, artistName }),
         axios.post('/api/analysis', { songTitle, artistName })
       ]);
 
+      console.log('Keywords Response:', keywordsRes.data);
+      console.log('Analysis Response:', analysisRes.data);
+
       setKeywordsResponse(keywordsRes.data.response);
       setAnalysisResponse(analysisRes.data.response);
       setYoutubeUrl(keywordsRes.data.youtubeUrl);
+      setMoodsAndThemes(keywordsRes.data.moodsAndThemes);
       setSubmitted(true);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -90,7 +97,7 @@ export default function Home() {
           placeholder="Enter artist name (optional)"
           className="w-full"
         />
-        <Button type="submit" variant="outline" className="w-full">Search</Button>
+        <Button type="submit" variant="outline" className="w-full">Submit</Button>
       </form>
       <div className="mt-6">
         <h2 className="text-xl flex justify-center mb-4 font-semibold">Interpretation :</h2>
@@ -103,6 +110,7 @@ export default function Home() {
             submitted && (
               <>
                 <Keywords keywords={keywordsResponse} className="max-w-md mx-auto" />
+                {moodsAndThemes && <EmotionGraph moodsAndThemes={moodsAndThemes} />}
                 {youtubeUrl && (
                   <div className="mt-4 flex justify-center max-w-md mx-auto">
                     <iframe

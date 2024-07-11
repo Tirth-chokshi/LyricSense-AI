@@ -5,7 +5,8 @@ import Groq from "groq-sdk";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API });
 
-export async function getGroqChatCompletion(prompt) {
+export async function getGroqChatCompletion(yourOriginalPrompt) {
+  const prompt = `Please provide the response in plain text without any Markdown formatting: ${yourOriginalPrompt}`;
   return await groq.chat.completions.create({
     messages: [
       {
