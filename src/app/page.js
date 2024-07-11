@@ -90,7 +90,7 @@ export default function Home() {
           placeholder="Enter artist name (optional)"
           className="w-full"
         />
-        <Button type="submit" variant="outline" className="w-full">Submit</Button>
+        <Button type="submit" variant="outline" className="w-full">Search</Button>
       </form>
       <div className="mt-6">
         <h2 className="text-xl flex justify-center mb-4 font-semibold">Interpretation :</h2>
