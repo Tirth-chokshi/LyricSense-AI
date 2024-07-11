@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Keywords from "@/components/Keywords";
 import Analysis from "@/components/Analysis";
+import ChatInterface from '@/components/ChatInterface';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,10 +22,12 @@ export default function Home() {
   const [analysisResponse, setAnalysisResponse] = useState('');
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false); // State to track form submission
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setSubmitted(false); // Reset submission status
     try {
       const [keywordsRes, analysisRes] = await Promise.all([
         axios.post('/api/keywords', { songTitle, artistName }),
@@ -34,6 +37,7 @@ export default function Home() {
       setKeywordsResponse(keywordsRes.data.response);
       setAnalysisResponse(analysisRes.data.response);
       setYoutubeUrl(keywordsRes.data.youtubeUrl);
+      setSubmitted(true); // Set submission status to true
     } catch (error) {
       console.error('Error fetching data:', error);
       setKeywordsResponse('Error fetching data');
@@ -95,26 +99,34 @@ export default function Home() {
               <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
             </div>
           ) : (
-            <>
-              <Keywords keywords={keywordsResponse} />
-              {youtubeUrl && (
-                <div className="mt-4 flex justify-center">                  
-                  <iframe
-                    width="560"
-                    height="315"
-                    src={youtubeUrl}
-                    title="YouTube video player"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
-                </div>
-              )}
-              <Analysis analysis={analysisResponse} />
-            </>
+            submitted && (
+              <>
+                <Keywords keywords={keywordsResponse} />
+                {youtubeUrl && (
+                  <div className="mt-4 flex justify-center">                  
+                    <iframe
+                      width="560"
+                      height="315"
+                      src={youtubeUrl}
+                      title="YouTube video player"
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                )}
+                <Analysis analysis={analysisResponse} />
+              </>
+            )
           )}
         </div>
       </div>
+      {submitted && (
+        <div className="mt-6">
+          <h2 className="text-xl flex justify-center mb-4 font-semibold">Chat with AI:</h2>
+          <ChatInterface songTitle={songTitle} artistName={artistName} />
+        </div>
+      )}
     </div>
   );
 }

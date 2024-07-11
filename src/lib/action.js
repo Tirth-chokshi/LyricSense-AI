@@ -13,8 +13,8 @@ export async function getGroqChatCompletion(prompt) {
         content: prompt,
       },
     ],
-    // model: 'gemma-7b-it',
-    model: 'llama3-70b-8192',
+    model: 'gemma-7b-it',
+    // model: 'llama3-70b-8192',
     // model: 'llama3-8b-8192',
   });
 }
@@ -34,6 +34,21 @@ export default async function fetchLyrics(arg) {
     }
   } catch (e) {
     throw e;
+  }
+}
+export async function handleChat(req, res) {
+  if (req.method === 'POST') {
+    try {
+      const { message } = req.body;
+      const prompt = `Analyze the given lyrics and respond to the user's message: "${message}"`;
+      const chatCompletion = await getGroqChatCompletion(prompt);
+      res.status(200).json({ response: chatCompletion.choices[0].message.content });
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      res.status(500).json({ error: 'Error fetching data' });
+    }
+  } else {
+    res.status(405).json({ error: 'Method not allowed' });
   }
 }
 
