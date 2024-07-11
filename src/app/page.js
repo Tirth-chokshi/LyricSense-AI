@@ -22,12 +22,15 @@ export default function Home() {
   const [analysisResponse, setAnalysisResponse] = useState('');
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false); // State to track form submission
+  const [submitted, setSubmitted] = useState(false);
+
+  const { setTheme } = useTheme();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setSubmitted(false); // Reset submission status
+    setSubmitted(false);
+
     try {
       const [keywordsRes, analysisRes] = await Promise.all([
         axios.post('/api/keywords', { songTitle, artistName }),
@@ -37,7 +40,7 @@ export default function Home() {
       setKeywordsResponse(keywordsRes.data.response);
       setAnalysisResponse(analysisRes.data.response);
       setYoutubeUrl(keywordsRes.data.youtubeUrl);
-      setSubmitted(true); // Set submission status to true
+      setSubmitted(true);
     } catch (error) {
       console.error('Error fetching data:', error);
       setKeywordsResponse('Error fetching data');
@@ -47,10 +50,8 @@ export default function Home() {
     }
   };
 
-  const { setTheme } = useTheme();
-
   return (
-    <div className="relative container mx-auto p-4">
+    <div className="relative container mx-auto p-4 max-w-3xl">
       <div className="absolute top-4 right-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -73,8 +74,8 @@ export default function Home() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <h1 className="text-2xl font-bold mb-4">LyricSense AI</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <h1 className="text-2xl font-bold mb-4 text-center">LyricSense AI</h1>
+      <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
         <Input
           type="text"
           value={songTitle}
@@ -95,15 +96,15 @@ export default function Home() {
         <h2 className="text-xl flex justify-center mb-4 font-semibold">Interpretation :</h2>
         <div className="prose dark:prose-dark space-y-4">
           {loading ? (
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center max-w-md mx-auto">
               <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
             </div>
           ) : (
             submitted && (
               <>
-                <Keywords keywords={keywordsResponse} />
+                <Keywords keywords={keywordsResponse} className="max-w-md mx-auto" />
                 {youtubeUrl && (
-                  <div className="mt-4 flex justify-center">                  
+                  <div className="mt-4 flex justify-center max-w-md mx-auto">
                     <iframe
                       width="560"
                       height="315"
@@ -123,8 +124,10 @@ export default function Home() {
       </div>
       {submitted && (
         <div className="mt-6">
-          <h2 className="text-xl flex justify-center mb-4 font-semibold">Chat with AI:</h2>
-          <ChatInterface songTitle={songTitle} artistName={artistName} />
+          <h2 className="text-xl flex justify-center mb-4 font-semibold max-w-md mx-auto">Chat with AI:</h2>
+          <div className="max-w-md mx-auto">
+            <ChatInterface songTitle={songTitle} artistName={artistName} />
+          </div>
         </div>
       )}
     </div>

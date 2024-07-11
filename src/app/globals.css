@@ -98,6 +98,13 @@
     transform: scale(1) translate(-50%, -50%);
   }
 }
+/* Add this to your global CSS file or a specific CSS module */
+.number {
+  color: red; /* Change this to your desired color */
+  font-weight: bold; /* Change this to your desired font weight */
+}
+
+
 .input {
   @apply border p-2 mb-4 w-full;
 }
