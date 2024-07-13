@@ -1,4 +1,4 @@
-import { keywordsgetGroqChatCompletion } from '@/lib/action';
+import { getGroqChatCompletion } from '@/lib/action';
 import getLyrics from '@/misc/getLyrics';
 import getYoutubeVideo from '@/misc/getYtVideo';
 
@@ -18,7 +18,7 @@ export default async function handler(req, res) {
         return res.status(404).json({ error: 'Lyrics not found' });
       }
       const prompt = `${keywordPrompt} ${lyrics}`;
-      const chatCompletion = await keywordsgetGroqChatCompletion(prompt);
+      const chatCompletion = await getGroqChatCompletion(prompt);
       const youtubeUrl = await getYoutubeVideo(songTitle, artistName);
       res.status(200).json({ 
         response: chatCompletion.choices[0].message.content,youtubeUrl

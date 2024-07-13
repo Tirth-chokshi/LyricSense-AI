@@ -4,7 +4,6 @@ import extractLyrics from '@/misc/helpers/extractLyrics.js';
 import Groq from "groq-sdk";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API });
-
 export async function keywordsgetGroqChatCompletion(yourOriginalPrompt) {
   const prompt = `Please provide the response in plain text without any Markdown formatting: ${yourOriginalPrompt}`;
   return await groq.chat.completions.create({
@@ -19,7 +18,7 @@ export async function keywordsgetGroqChatCompletion(yourOriginalPrompt) {
     // model: 'llama3-8b-8192',
   });
 }
-export async function analysisgetGroqChatCompletion(yourOriginalPrompt) {
+export async function getGroqChatCompletion(yourOriginalPrompt) {
   const prompt = `Please provide the response in plain text without any Markdown formatting: ${yourOriginalPrompt}`;
   return await groq.chat.completions.create({
     messages: [
