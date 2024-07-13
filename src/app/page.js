@@ -15,16 +15,29 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import WordCloud from '@/components/WordCloud';
+import SentimentTimeline from '@/components/SentimentTimeline';
+import ThemeRadar from '@/components/ThemeRadar';
+import RhymeScheme from '@/components/RhymeScheme';
+import InteractiveLyrics from '@/components/InteractiveLyrics';
 
 export default function Home() {
   const [songTitle, setSongTitle] = useState('');
   const [artistName, setArtistName] = useState('');
   const [keywordsResponse, setKeywordsResponse] = useState('');
   const [analysisResponse, setAnalysisResponse] = useState('');
+  const [emotionData, setEmotionData] = useState([]);
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [moodsAndThemes, setMoodsAndThemes] = useState(null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  // New state variables for additional data
+  const [wordCloudData, setWordCloudData] = useState([]);
+  const [sentimentData, setSentimentData] = useState([]);
+  const [themeData, setThemeData] = useState([]);
+  const [rhymeData, setRhymeData] = useState({});
+  const [lyricsData, setLyricsData] = useState([]);
 
   const { setTheme } = useTheme();
 
@@ -44,9 +57,18 @@ export default function Home() {
       console.log('Analysis Response:', analysisRes.data);
 
       setKeywordsResponse(keywordsRes.data.response);
-      setAnalysisResponse(analysisRes.data.response);
+      setAnalysisResponse(analysisRes.data.overallAnalysis);
+      setEmotionData(analysisRes.data.emotionData);
       setYoutubeUrl(keywordsRes.data.youtubeUrl);
       setMoodsAndThemes(keywordsRes.data.moodsAndThemes);
+
+      // Set the new state variables
+      setWordCloudData(analysisRes.data.wordCloudData || []);
+      setSentimentData(analysisRes.data.sentimentData || []);
+      setThemeData(analysisRes.data.themeData || []);
+      setRhymeData(analysisRes.data.rhymeData || {});
+      setLyricsData(analysisRes.data.lyricsData || []);
+
       setSubmitted(true);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -100,7 +122,7 @@ export default function Home() {
         <Button type="submit" variant="outline" className="w-full">Submit</Button>
       </form>
       <div className="mt-6">
-        <h2 className="text-xl flex justify-center mb-4 font-semibold">Interpretation :</h2>
+        <h2 className="text-xl flex justify-center mb-4 font-semibold">Interpretation:</h2>
         <div className="prose dark:prose-dark space-y-4">
           {loading ? (
             <div className="flex justify-center items-center max-w-md mx-auto">
@@ -109,8 +131,14 @@ export default function Home() {
           ) : (
             submitted && (
               <>
+                <WordCloud words={wordCloudData} />
+                <SentimentTimeline sentimentData={sentimentData} />
+                <ThemeRadar themeData={themeData} />
+                <RhymeScheme rhymeData={rhymeData} />
+                <InteractiveLyrics lyricsData={lyricsData} />
                 <Keywords keywords={keywordsResponse} className="max-w-md mx-auto" />
                 {moodsAndThemes && <EmotionGraph moodsAndThemes={moodsAndThemes} />}
+                <EmotionGraph emotionData={emotionData} />
                 {youtubeUrl && (
                   <div className="mt-4 flex justify-center max-w-md mx-auto">
                     <iframe
