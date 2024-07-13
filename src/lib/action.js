@@ -14,8 +14,8 @@ export async function getGroqChatCompletion(yourOriginalPrompt) {
         content: prompt,
       },
     ],
-    // model: 'gemma-7b-it',
-    model: 'llama3-70b-8192',
+    model: 'gemma-7b-it',
+    // model: 'llama3-70b-8192',
     // model: 'llama3-8b-8192',
   });
 }

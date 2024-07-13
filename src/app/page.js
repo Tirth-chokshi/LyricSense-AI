@@ -80,7 +80,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative container mx-auto p-4 max-w-3xl">
+    <div className="relative container mx-auto p-4">
       <div className="absolute top-4 right-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -104,28 +104,28 @@ export default function Home() {
         </DropdownMenu>
       </div>
       <h1 className="text-2xl font-bold mb-4 text-center">LyricSense AI</h1>
-      <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
+      <form onSubmit={handleSubmit} className="space-y-4">
         <Input
           type="text"
           value={songTitle}
           onChange={(e) => setSongTitle(e.target.value)}
           placeholder="Enter song title"
-          className="w-full"
+          className="w-auto"
         />
         <Input
           type="text"
           value={artistName}
           onChange={(e) => setArtistName(e.target.value)}
           placeholder="Enter artist name (optional)"
-          className="w-full"
+          className="w-auto"
         />
-        <Button type="submit" variant="outline" className="w-full">Submit</Button>
+        <Button type="submit" variant="outline" className="w-auto">Submit</Button>
       </form>
       <div className="mt-6">
         <h2 className="text-xl flex justify-center mb-4 font-semibold">Interpretation:</h2>
         <div className="prose dark:prose-dark space-y-4">
           {loading ? (
-            <div className="flex justify-center items-center max-w-md mx-auto">
+            <div className="flex justify-center items-center">
               <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
             </div>
           ) : (
@@ -136,14 +136,14 @@ export default function Home() {
                 {/* <ThemeRadar themeData={themeData} /> */}
                 <RhymeScheme rhymeData={rhymeData} />
                 {/* <InteractiveLyrics lyricsData={lyricsData} /> */}
-                <Keywords keywords={keywordsResponse} className="max-w-md mx-auto" />
+                <Keywords keywords={keywordsResponse} className="w-auto" />
                 {moodsAndThemes && <EmotionGraph moodsAndThemes={moodsAndThemes} />}
                 {/* <EmotionGraph emotionData={emotionData} /> */}
                 {youtubeUrl && (
-                  <div className="mt-4 flex justify-center max-w-md mx-auto">
+                  <div className="mt-4 flex justify-center">
                     <iframe
-                      width="560"
-                      height="315"
+                      width="auto"
+                      height="auto"
                       src={youtubeUrl}
                       title="YouTube video player"
                       frameBorder="0"
@@ -160,12 +160,14 @@ export default function Home() {
       </div>
       {submitted && (
         <div className="mt-6">
-          <h2 className="text-xl flex justify-center mb-4 font-semibold max-w-md mx-auto">Chat with AI:</h2>
-          <div className="max-w-md mx-auto">
+          <h2 className="text-xl flex justify-center mb-4 font-semibold">Chat with AI:</h2>
+          <div>
             <ChatInterface songTitle={songTitle} artistName={artistName} />
           </div>
         </div>
       )}
     </div>
   );
+  
+
 }
