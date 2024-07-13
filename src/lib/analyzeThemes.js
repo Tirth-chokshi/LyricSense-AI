@@ -1,4 +1,4 @@
-import { getGroqChatCompletion } from "./action";
+import { analysisgetGroqChatCompletion } from "./action";
 
 export default async function analyzeThemes(lyrics) {
   try {
@@ -18,7 +18,7 @@ Example response format:
   }
 ]`;
 
-    const chatCompletion = await getGroqChatCompletion(prompt);
+    const chatCompletion = await analysisgetGroqChatCompletion(prompt);
     const responseContent = chatCompletion.choices[0].message.content;
 
     // Try to parse the response as JSON

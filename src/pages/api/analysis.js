@@ -1,4 +1,4 @@
-import { getGroqChatCompletion } from "@/lib/action";
+import { analysisgetGroqChatCompletion } from "@/lib/action";
 import getLyrics from "@/misc/getLyrics";
 import generateWordCloudData from '@/lib/generateWordCloudData';
 import analyzeSentiment from '@/lib/analyzeSentiment';
@@ -73,7 +73,7 @@ Response format:
 Emotion: [emotion]
 Intensity: [1-10]`;
 
-          const chatCompletion = await getGroqChatCompletion(prompt);
+          const chatCompletion = await analysisgetGroqChatCompletion(prompt);
           const response = chatCompletion.choices[0].message.content;
 
           // Parse the response
@@ -92,7 +92,7 @@ Intensity: [1-10]`;
       try {
         const analysisPrompt = process.env.ANALYSIS_PROMPT;
         const overallAnalysisPrompt = `${analysisPrompt} ${lyrics}`;
-        overallAnalysis = await getGroqChatCompletion(overallAnalysisPrompt);
+        overallAnalysis = await analysisgetGroqChatCompletion(overallAnalysisPrompt);
       } catch (error) {
         console.error('Error performing overall analysis:', error);
         overallAnalysis = { choices: [{ message: { content: "Error in overall analysis" } }] };

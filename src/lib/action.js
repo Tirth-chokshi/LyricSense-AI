@@ -5,7 +5,21 @@ import Groq from "groq-sdk";
 
 const groq = new Groq({ apiKey: process.env.GROQ_API });
 
-export async function getGroqChatCompletion(yourOriginalPrompt) {
+export async function keywordsgetGroqChatCompletion(yourOriginalPrompt) {
+  const prompt = `Please provide the response in plain text without any Markdown formatting: ${yourOriginalPrompt}`;
+  return await groq.chat.completions.create({
+    messages: [
+      {
+        role: "user",
+        content: prompt,
+      },
+    ],
+    // model: 'gemma-7b-it',
+    model: 'llama3-70b-8192',
+    // model: 'llama3-8b-8192',
+  });
+}
+export async function analysisgetGroqChatCompletion(yourOriginalPrompt) {
   const prompt = `Please provide the response in plain text without any Markdown formatting: ${yourOriginalPrompt}`;
   return await groq.chat.completions.create({
     messages: [
