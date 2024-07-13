@@ -22,7 +22,12 @@ export default async function handler(req, res) {
       }
 
       let wordCloudData, sentimentData, themeData, rhymeData, lyricsData, overallAnalysis;
-
+      try {
+        wordCloudData = generateWordCloudData(lyrics);
+      } catch (error) {
+        console.error('Error generating word cloud data:', error);
+        wordCloudData = [];
+      }
       // Analyze lyrics in detail
       try {
         lyricsData = await analyzeLyricsInDetail(lyrics);
