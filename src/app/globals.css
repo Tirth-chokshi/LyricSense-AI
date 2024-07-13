@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -51,10 +49,16 @@
   }
 }
 
-
-.loader::before {
-  background-color: #000;
-  transform: scale(0.5) translate(-48px, -48px);
+/* Loading animation */
+.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #FFF;
+  border-bottom-color: var(--primary);
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
 }
 
 @keyframes rotation {
@@ -64,19 +68,13 @@
   100% {
     transform: rotate(360deg);
   }
-} 
-
-@keyframes animloader {
-  50% {
-    transform: scale(1) translate(-50%, -50%);
-  }
 }
-/* Add this to your global CSS file or a specific CSS module */
+
+/* Additional custom styles */
 .number {
-  color: red; /* Change this to your desired color */
-  font-weight: bold; /* Change this to your desired font weight */
+  color: red;
+  font-weight: bold;
 }
-
 
 .input {
   @apply border p-2 mb-4 w-full;

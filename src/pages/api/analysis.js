@@ -21,36 +21,9 @@ export default async function handler(req, res) {
         return res.status(404).json({ error: 'Lyrics not found' });
       }
 
-      let wordCloudData, sentimentData, themeData, rhymeData, lyricsData, emotionData, overallAnalysis;
+      let wordCloudData, sentimentData, themeData, rhymeData, lyricsData, overallAnalysis;
 
-      try {
-        wordCloudData = generateWordCloudData(lyrics);
-      } catch (error) {
-        console.error('Error generating word cloud data:', error);
-        wordCloudData = [];
-      }
-
-      try {
-        sentimentData = analyzeSentiment(lyrics);
-      } catch (error) {
-        console.error('Error analyzing sentiment:', error);
-        sentimentData = { score: 0, comparative: 0 };
-      }
-
-      try {
-        themeData = await analyzeThemes(lyrics);
-      } catch (error) {
-        console.error('Error analyzing themes:', error);
-        themeData = [{ name: "Error", description: "An error occurred while analyzing themes." }];
-      }
-
-      try {
-        rhymeData = analyzeRhymes(lyrics);
-      } catch (error) {
-        console.error('Error analyzing rhymes:', error);
-        rhymeData = {};
-      }
-
+      // Analyze lyrics in detail
       try {
         lyricsData = await analyzeLyricsInDetail(lyrics);
       } catch (error) {
@@ -58,34 +31,28 @@ export default async function handler(req, res) {
         lyricsData = [{ line: "Error analyzing lyrics", words: [] }];
       }
 
-      // Split lyrics into verses or lines
-      const segments = lyrics.split('\n\n'); // Adjust this based on your lyrics format
+      // Analyze sentiment
+      try {
+        sentimentData = analyzeSentiment(lyrics);
+      } catch (error) {
+        console.error('Error analyzing sentiment:', error);
+        sentimentData = { score: 0, comparative: 0 };
+      }
 
-      emotionData = [];
-      for (let i = 0; i < segments.length; i++) {
-        try {
-          const segment = segments[i];
-          const prompt = `Analyze the following lyric segment and provide the dominant emotion and its intensity on a scale of 1-10:
+      // Analyze themes
+      try {
+        themeData = await analyzeThemes(lyrics);
+      } catch (error) {
+        console.error('Error analyzing themes:', error);
+        themeData = [{ name: "Error", description: "An error occurred while analyzing themes." }];
+      }
 
-${segment}
-
-Response format:
-Emotion: [emotion]
-Intensity: [1-10]`;
-
-          const chatCompletion = await analysisgetGroqChatCompletion(prompt);
-          const response = chatCompletion.choices[0].message.content;
-
-          // Parse the response
-          const [emotionLine, intensityLine] = response.split('\n');
-          const emotion = emotionLine.split(': ')[1];
-          const intensity = parseInt(intensityLine.split(': ')[1]);
-
-          emotionData.push({ segment, emotion, intensity });
-        } catch (error) {
-          console.error('Error analyzing emotion for segment:', error);
-          emotionData.push({ segment: segments[i], emotion: "Error", intensity: 0 });
-        }
+      // Analyze rhymes
+      try {
+        rhymeData = analyzeRhymes(lyrics);
+      } catch (error) {
+        console.error('Error analyzing rhymes:', error);
+        rhymeData = {};
       }
 
       // Perform overall analysis
@@ -99,7 +66,6 @@ Intensity: [1-10]`;
       }
 
       res.status(200).json({
-        emotionData,
         overallAnalysis: overallAnalysis.choices[0].message.content,
         wordCloudData,
         sentimentData,
