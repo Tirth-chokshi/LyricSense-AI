@@ -133,12 +133,12 @@ export default function Home() {
               <>
                 <WordCloud words={wordCloudData} />
                 <SentimentTimeline sentimentData={sentimentData} />
-                <ThemeRadar themeData={themeData} />
-                <RhymeScheme rhymeData={rhymeData} />
-                <InteractiveLyrics lyricsData={lyricsData} />
+                {/* <ThemeRadar themeData={themeData} /> */}
+                {/* <RhymeScheme rhymeData={rhymeData} /> */}
+                {/* <InteractiveLyrics lyricsData={lyricsData} /> */}
                 <Keywords keywords={keywordsResponse} className="max-w-md mx-auto" />
                 {moodsAndThemes && <EmotionGraph moodsAndThemes={moodsAndThemes} />}
-                <EmotionGraph emotionData={emotionData} />
+                {/* <EmotionGraph emotionData={emotionData} /> */}
                 {youtubeUrl && (
                   <div className="mt-4 flex justify-center max-w-md mx-auto">
                     <iframe
