@@ -134,7 +134,7 @@ export default function Home() {
                 <WordCloud words={wordCloudData} />
                 <SentimentTimeline sentimentData={sentimentData} />
                 {/* <ThemeRadar themeData={themeData} /> */}
-                {/* <RhymeScheme rhymeData={rhymeData} /> */}
+                <RhymeScheme rhymeData={rhymeData} />
                 {/* <InteractiveLyrics lyricsData={lyricsData} /> */}
                 <Keywords keywords={keywordsResponse} className="max-w-md mx-auto" />
                 {moodsAndThemes && <EmotionGraph moodsAndThemes={moodsAndThemes} />}
