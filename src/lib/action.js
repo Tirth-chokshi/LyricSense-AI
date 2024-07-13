@@ -18,7 +18,7 @@ export async function keywordsgetGroqChatCompletion(yourOriginalPrompt) {
     // model: 'llama3-8b-8192',
   });
 }
-export async function getGroqChatCompletion(yourOriginalPrompt) {
+export async function analysisgetGroqChatCompletion(yourOriginalPrompt) {
   const prompt = `Please provide the response in plain text without any Markdown formatting: ${yourOriginalPrompt}`;
   return await groq.chat.completions.create({
     messages: [

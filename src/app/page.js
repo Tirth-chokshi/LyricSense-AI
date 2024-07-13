@@ -26,7 +26,7 @@ export default function Home() {
   const [artistName, setArtistName] = useState('');
   const [keywordsResponse, setKeywordsResponse] = useState('');
   const [analysisResponse, setAnalysisResponse] = useState('');
-  const [emotionData, setEmotionData] = useState([]);
+  // const [emotionData, setEmotionData] = useState([]);
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [moodsAndThemes, setMoodsAndThemes] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -57,7 +57,7 @@ export default function Home() {
 
       setKeywordsResponse(keywordsRes.data.response);
       setAnalysisResponse(analysisRes.data.overallAnalysis);
-      setEmotionData(analysisRes.data.emotionData);
+      // setEmotionData(analysisRes.data.emotionData);
       setYoutubeUrl(keywordsRes.data.youtubeUrl);
       setMoodsAndThemes(keywordsRes.data.moodsAndThemes);
 
