@@ -17,16 +17,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import WordCloud from '@/components/WordCloud';
 import SentimentTimeline from '@/components/SentimentTimeline';
-// import ThemeRadar from '@/components/ThemeRadar';
 import RhymeScheme from '@/components/RhymeScheme';
-// import InteractiveLyrics from '@/components/InteractiveLyrics';
 
 export default function Home() {
   const [songTitle, setSongTitle] = useState('');
   const [artistName, setArtistName] = useState('');
   const [keywordsResponse, setKeywordsResponse] = useState('');
   const [analysisResponse, setAnalysisResponse] = useState('');
-  // const [emotionData, setEmotionData] = useState([]);
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [moodsAndThemes, setMoodsAndThemes] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -57,11 +54,9 @@ export default function Home() {
 
       setKeywordsResponse(keywordsRes.data.response);
       setAnalysisResponse(analysisRes.data.overallAnalysis);
-      // setEmotionData(analysisRes.data.emotionData);
       setYoutubeUrl(keywordsRes.data.youtubeUrl);
       setMoodsAndThemes(keywordsRes.data.moodsAndThemes);
 
-      // Set the new state variables
       setWordCloudData(analysisRes.data.wordCloudData || []);
       setSentimentData(analysisRes.data.sentimentData || []);
       setThemeData(analysisRes.data.themeData || []);
@@ -102,9 +97,9 @@ export default function Home() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      
+
       <h1 className="text-2xl font-bold mb-4 text-center">LyricSense AI</h1>
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <Input
           type="text"
@@ -134,7 +129,7 @@ export default function Home() {
           )}
         </Button>
       </form>
-      
+
       <div className="mt-6">
         <h2 className="text-xl flex justify-center mb-4 font-semibold">Interpretation:</h2>
         <div className="prose dark:prose-dark space-y-4">
@@ -145,34 +140,34 @@ export default function Home() {
           ) : (
             submitted && (
               <>
+                <div className="interpretation-container">
+                  <div className="youtube-container">
+                    {youtubeUrl && (
+                      <iframe
+                        className="w-full h-full"
+                        src={youtubeUrl}
+                        title="YouTube video player"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      ></iframe>
+                    )}
+                  </div>
+                  <div>
+                    <Keywords keywords={keywordsResponse} />
+                  </div>
+                </div>
                 <WordCloud words={wordCloudData} />
                 <SentimentTimeline sentimentData={sentimentData} />
-                {/* <ThemeRadar themeData={themeData} /> */}
                 <RhymeScheme rhymeData={rhymeData} />
-                {/* <InteractiveLyrics lyricsData={lyricsData} /> */}
-                <Keywords keywords={keywordsResponse} className="w-auto" />
                 {moodsAndThemes && <EmotionGraph moodsAndThemes={moodsAndThemes} />}
-                {/* <EmotionGraph emotionData={emotionData} /> */}
-                {youtubeUrl && (
-                  <div className="mt-4 flex justify-center">
-                    <iframe
-                      width="auto"
-                      height="auto"
-                      src={youtubeUrl}
-                      title="YouTube video player"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                )}
                 <Analysis analysis={analysisResponse} />
               </>
             )
           )}
         </div>
       </div>
-      
+
       {submitted && (
         <div className="mt-6">
           <h2 className="text-xl flex justify-center mb-4 font-semibold">Chat with AI:</h2>

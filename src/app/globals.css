@@ -89,3 +89,19 @@
 .language-explicit-component {
   @apply border p-4 mb-4;
 }
+
+@layer components {
+  .interpretation-container {
+    @apply grid gap-4;
+  }
+
+  .youtube-container {
+    @apply aspect-video w-full;
+  }
+
+  @screen md {
+    .interpretation-container {
+      @apply grid-cols-2;
+    }
+  }
+}
