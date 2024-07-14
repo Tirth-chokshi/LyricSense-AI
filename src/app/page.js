@@ -1,77 +1,79 @@
-"use client";
-import { useState } from 'react';
-import axios from 'axios';
-import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
-import { useTheme } from "next-themes";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import Keywords from "@/components/Keywords";
-import Analysis from "@/components/Analysis";
-import ChatInterface from '@/components/ChatInterface';
-import EmotionGraph from '@/components/EmotionGraph';
+"use client"
+import { useState } from 'react'
+import axios from 'axios'
+import { MoonIcon, SunIcon } from "@radix-ui/react-icons"
+import { useTheme } from "next-themes"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import Keywords from "@/components/Keywords"
+import Analysis from "@/components/Analysis"
+import ChatInterface from '@/components/ChatInterface'
+import EmotionGraph from '@/components/EmotionGraph'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import WordCloud from '@/components/WordCloud';
-import SentimentTimeline from '@/components/SentimentTimeline';
-import RhymeScheme from '@/components/RhymeScheme';
+} from "@/components/ui/dropdown-menu"
+import WordCloud from '@/components/WordCloud'
+import SentimentTimeline from '@/components/SentimentTimeline'
+import RhymeScheme from '@/components/RhymeScheme'
+// import InteractiveLyrics from '@/components/InteractiveLyrics'
+// import ThemeRadar from '@/components/ThemeRadar'
 
 export default function Home() {
-  const [songTitle, setSongTitle] = useState('');
-  const [artistName, setArtistName] = useState('');
-  const [keywordsResponse, setKeywordsResponse] = useState('');
-  const [analysisResponse, setAnalysisResponse] = useState('');
-  const [youtubeUrl, setYoutubeUrl] = useState('');
-  const [moodsAndThemes, setMoodsAndThemes] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [songTitle, setSongTitle] = useState('')
+  const [artistName, setArtistName] = useState('')
+  const [keywordsResponse, setKeywordsResponse] = useState('')
+  const [analysisResponse, setAnalysisResponse] = useState('')
+  const [youtubeUrl, setYoutubeUrl] = useState('')
+  const [moodsAndThemes, setMoodsAndThemes] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+  // const [emotionData, setEmotionData] = useState([])
+  const [wordCloudData, setWordCloudData] = useState([])
+  const [sentimentData, setSentimentData] = useState([])
+  const [themeData, setThemeData] = useState([])
+  const [rhymeData, setRhymeData] = useState({})
+  const [lyricsData, setLyricsData] = useState([])
 
-  const [wordCloudData, setWordCloudData] = useState([]);
-  const [sentimentData, setSentimentData] = useState([]);
-  const [themeData, setThemeData] = useState([]);
-  const [rhymeData, setRhymeData] = useState({});
-  const [lyricsData, setLyricsData] = useState([]);
-
-  const { setTheme } = useTheme();
+  const { setTheme } = useTheme()
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setSubmitted(false);
+    e.preventDefault()
+    setLoading(true)
+    setSubmitted(false)
 
     try {
-      console.log('Submitting form with:', { songTitle, artistName });
+      console.log('Submitting form with:', { songTitle, artistName })
       const [keywordsRes, analysisRes] = await Promise.all([
         axios.post('/api/keywords', { songTitle, artistName }),
         axios.post('/api/analysis', { songTitle, artistName })
-      ]);
+      ])
 
-      console.log('Keywords Response:', keywordsRes.data);
-      console.log('Analysis Response:', analysisRes.data);
+      console.log('Keywords Response:', keywordsRes.data)
+      console.log('Analysis Response:', analysisRes.data)
 
-      setKeywordsResponse(keywordsRes.data.response);
-      setAnalysisResponse(analysisRes.data.overallAnalysis);
-      setYoutubeUrl(keywordsRes.data.youtubeUrl);
-      setMoodsAndThemes(keywordsRes.data.moodsAndThemes);
+      setKeywordsResponse(keywordsRes.data.response)
+      setAnalysisResponse(analysisRes.data.overallAnalysis)
+      setYoutubeUrl(keywordsRes.data.youtubeUrl)
+      setMoodsAndThemes(keywordsRes.data.moodsAndThemes)
+      // setEmotionData(analysisRes.data.emotionData)
+      setWordCloudData(analysisRes.data.wordCloudData || [])
+      setSentimentData(analysisRes.data.sentimentData || [])
+      setThemeData(analysisRes.data.themeData || [])
+      setRhymeData(analysisRes.data.rhymeData || {})
+      setLyricsData(analysisRes.data.lyricsData || [])
 
-      setWordCloudData(analysisRes.data.wordCloudData || []);
-      setSentimentData(analysisRes.data.sentimentData || []);
-      setThemeData(analysisRes.data.themeData || []);
-      setRhymeData(analysisRes.data.rhymeData || {});
-      setLyricsData(analysisRes.data.lyricsData || []);
-
-      setSubmitted(true);
+      setSubmitted(true)
     } catch (error) {
-      console.error('Error fetching data:', error);
-      setKeywordsResponse('Error fetching data');
-      setAnalysisResponse('Error fetching data');
+      console.error('Error fetching data:', error)
+      setKeywordsResponse('Error fetching data')
+      setAnalysisResponse('Error fetching data')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary">
@@ -141,7 +143,7 @@ export default function Home() {
                         src={youtubeUrl}
                         title="YouTube video player"
                         frameBorder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allow="accelerometer autoplay clipboard-write encrypted-media gyroscope picture-in-picture"
                         allowFullScreen
                       ></iframe>
                     )}
@@ -182,5 +184,5 @@ export default function Home() {
         </main>
       </div>
     </div>
-  );
+  )
 }
