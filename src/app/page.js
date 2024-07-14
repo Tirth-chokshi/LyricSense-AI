@@ -8,16 +8,16 @@ import { Button } from "@/components/ui/button"
 import Keywords from "@/components/Keywords"
 import Analysis from "@/components/Analysis"
 import ChatInterface from '@/components/ChatInterface'
-import EmotionGraph from '@/components/EmotionGraph'
+// import EmotionGraph from '@/components/EmotionGraph'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import WordCloud from '@/components/WordCloud'
-import SentimentTimeline from '@/components/SentimentTimeline'
-import RhymeScheme from '@/components/RhymeScheme'
+// import WordCloud from '@/components/WordCloud'
+// import SentimentTimeline from '@/components/SentimentTimeline'
+// import RhymeScheme from '@/components/RhymeScheme'
 // import InteractiveLyrics from '@/components/InteractiveLyrics'
 // import ThemeRadar from '@/components/ThemeRadar'
 
@@ -31,11 +31,11 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   // const [emotionData, setEmotionData] = useState([])
-  const [wordCloudData, setWordCloudData] = useState([])
-  const [sentimentData, setSentimentData] = useState([])
-  const [themeData, setThemeData] = useState([])
-  const [rhymeData, setRhymeData] = useState({})
-  const [lyricsData, setLyricsData] = useState([])
+  // const [wordCloudData, setWordCloudData] = useState([])
+  // const [sentimentData, setSentimentData] = useState([])
+  // const [themeData, setThemeData] = useState([])
+  // const [rhymeData, setRhymeData] = useState({})
+  // const [lyricsData, setLyricsData] = useState([])
 
   const { setTheme } = useTheme()
 
@@ -51,19 +51,16 @@ export default function Home() {
         axios.post('/api/analysis', { songTitle, artistName })
       ])
 
-      console.log('Keywords Response:', keywordsRes.data)
-      console.log('Analysis Response:', analysisRes.data)
-
       setKeywordsResponse(keywordsRes.data.response)
       setAnalysisResponse(analysisRes.data.overallAnalysis)
       setYoutubeUrl(keywordsRes.data.youtubeUrl)
       setMoodsAndThemes(keywordsRes.data.moodsAndThemes)
       // setEmotionData(analysisRes.data.emotionData)
-      setWordCloudData(analysisRes.data.wordCloudData || [])
-      setSentimentData(analysisRes.data.sentimentData || [])
-      setThemeData(analysisRes.data.themeData || [])
-      setRhymeData(analysisRes.data.rhymeData || {})
-      setLyricsData(analysisRes.data.lyricsData || [])
+      // setWordCloudData(analysisRes.data.wordCloudData || [])
+      // setSentimentData(analysisRes.data.sentimentData || [])
+      // setThemeData(analysisRes.data.themeData || [])
+      // setRhymeData(analysisRes.data.rhymeData || {})
+      // setLyricsData(analysisRes.data.lyricsData || [])
 
       setSubmitted(true)
     } catch (error) {
@@ -154,7 +151,7 @@ export default function Home() {
                 </div>
               </section>
 
-              <section className="bg-card rounded-lg shadow-md p-6">
+              {/* <section className="bg-card rounded-lg shadow-md p-6">
                 <h2 className="text-2xl font-semibold mb-4 text-card-foreground">Lyrical Analysis</h2>
                 <div className="grid gap-6 md:grid-cols-2">
                   <WordCloud words={wordCloudData} />
@@ -168,7 +165,7 @@ export default function Home() {
                   <RhymeScheme rhymeData={rhymeData} />
                   {moodsAndThemes && <EmotionGraph moodsAndThemes={moodsAndThemes} />}
                 </div>
-              </section>
+              </section> */}
 
               <section className="bg-card rounded-lg shadow-md p-6">
                 <h2 className="text-2xl font-semibold mb-4 text-card-foreground">Overall Analysis</h2>
@@ -176,7 +173,7 @@ export default function Home() {
               </section>
 
               <section className="bg-card rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-semibold mb-4 text-card-foreground">Chat with AI</h2>
+                <h2 className="text-2xl font-semibold mb-4 text-card-foreground">Chat with Song</h2>
                 <ChatInterface songTitle={songTitle} artistName={artistName} />
               </section>
             </div>

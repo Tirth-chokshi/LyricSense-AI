@@ -1,4 +1,4 @@
-import { analysisgetGroqChatCompletion } from '@/lib/action';
+import { keywordsgetGroqChatCompletion } from '@/lib/action';
 import getLyrics from '@/misc/getLyrics';
 
 export default async function handler(req, res) {
@@ -16,7 +16,7 @@ export default async function handler(req, res) {
                 return res.status(404).json({ error: 'Lyrics not found' });
             }
             const prompt = `Analyze the given lyrics and respond to the user's message: ${lyrics}\nUser's message: "${message}"`;
-            const chatCompletion = await analysisgetGroqChatCompletion(prompt);
+            const chatCompletion = await keywordsgetGroqChatCompletion(prompt);
             res.status(200).json({ response: chatCompletion.choices[0].message.content });
         } catch (error) {
             console.error('Error fetching data:', error);
