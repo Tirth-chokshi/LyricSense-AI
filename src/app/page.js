@@ -77,7 +77,7 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         <header className="flex justify-between items-center mb-12">
           <div className="flex-grow"></div>
-          <h1 className="text-center text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-foreground">
+          <h1 className="text-center text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-foreground">
             LyricSense AI
           </h1>
           <div className="flex-grow flex justify-end">
