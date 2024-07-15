@@ -71,7 +71,7 @@ export default function Home() {
       setLoading(false)
     }
   }
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background">
       <div className="container mx-auto px-4 py-8">
@@ -100,20 +100,34 @@ export default function Home() {
 
         <main>
           <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto mb-12 bg-card p-6 rounded-lg shadow-lg">
-            <Input
-              type="text"
-              value={songTitle}
-              onChange={(e) => setSongTitle(e.target.value)}
-              placeholder="Enter song title"
-              className="w-full"
-            />
-            <Input
-              type="text"
-              value={artistName}
-              onChange={(e) => setArtistName(e.target.value)}
-              placeholder="Enter artist name (optional)"
-              className="w-full"
-            />
+            <div className="relative">
+              <Input
+                type="text"
+                value={songTitle}
+                onChange={(e) => setSongTitle(e.target.value)}
+                placeholder="Enter song title"
+                className="w-full pl-4 pr-10 py-2 border rounded-md bg-gradient-to-r from-background to-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
+              />
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+                </svg>
+              </div>
+            </div>
+            <div className="relative">
+              <Input
+                type="text"
+                value={artistName}
+                onChange={(e) => setArtistName(e.target.value)}
+                placeholder="Enter artist name (optional)"
+                className="w-full pl-4 pr-10 py-2 border rounded-md bg-gradient-to-r from-background to-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
+              />
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+              </div>
+            </div>
             <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" disabled={loading}>
               {loading ? (
                 <>
