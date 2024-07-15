@@ -71,13 +71,13 @@ export default function Home() {
       setLoading(false)
     }
   }
-
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background">
       <div className="container mx-auto px-4 py-8">
-        <header className="flex justify-between items-center mb-8">
+        <header className="flex justify-between items-center mb-12">
           <div className="flex-grow"></div>
-          <h1 className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300/80 bg-clip-text text-center text-5xl font-semibold leading-none text-transparent dark:from-white dark:to-slate-900/10 flex-grow">
+          <h1 className="text-center text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary-foreground">
             LyricSense AI
           </h1>
           <div className="flex-grow flex justify-end">
@@ -99,7 +99,7 @@ export default function Home() {
         </header>
 
         <main>
-          <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto mb-8">
+          <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto mb-12 bg-card p-6 rounded-lg shadow-lg">
             <Input
               type="text"
               value={songTitle}
@@ -114,7 +114,7 @@ export default function Home() {
               placeholder="Enter artist name (optional)"
               className="w-full"
             />
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" disabled={loading}>
               {loading ? (
                 <>
                   <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -134,14 +134,14 @@ export default function Home() {
               <span className="loader"></span>
             </div>
           ) : submitted && (
-            <div className="space-y-8">
-              <section className="bg-card rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-semibold mb-4 text-card-foreground">Interpretation</h2>
-                <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-12 animate-fadeIn">
+              <section className="bg-card rounded-lg shadow-lg p-8 transition-all hover:shadow-xl">
+                <h2 className="text-3xl font-bold mb-6 text-card-foreground">Interpretation</h2>
+                <div className="grid gap-8 md:grid-cols-2">
                   <div className="youtube-container">
                     {youtubeUrl && (
                       <iframe
-                        className="w-full h-full rounded-md"
+                        className="w-full h-full rounded-md shadow-md"
                         src={youtubeUrl}
                         title="YouTube video player"
                         frameBorder="0"
@@ -150,35 +150,19 @@ export default function Home() {
                       ></iframe>
                     )}
                   </div>
-                  <div className="bg-popover rounded-md p-4">
+                  <div className="bg-popover rounded-md p-6 shadow-inner">
                     <Keywords keywords={keywordsResponse} />
                   </div>
                 </div>
               </section>
 
-              {/* <section className="bg-card rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-semibold mb-4 text-card-foreground">Lyrical Analysis</h2>
-                <div className="grid gap-6 md:grid-cols-2">
-                  <WordCloud words={wordCloudData} />
-                  <SentimentTimeline sentimentData={sentimentData} />
-                </div>
-              </section>
-
-              <section className="bg-card rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-semibold mb-4 text-card-foreground">Song Structure</h2>
-                <div className="grid gap-6 md:grid-cols-2">
-                  <RhymeScheme rhymeData={rhymeData} />
-                  {moodsAndThemes && <EmotionGraph moodsAndThemes={moodsAndThemes} />}
-                </div>
-              </section> */}
-
-              <section className="bg-card rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-semibold mb-4 text-card-foreground">Overall Analysis</h2>
+              <section className="bg-card rounded-lg shadow-lg p-8 transition-all hover:shadow-xl">
+                <h2 className="text-3xl font-bold mb-6 text-card-foreground">Overall Analysis</h2>
                 <Analysis analysis={analysisResponse} />
               </section>
 
-              <section className="bg-card rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-semibold mb-4 text-card-foreground">Chat with Song</h2>
+              <section className="bg-card rounded-lg shadow-lg p-8 transition-all hover:shadow-xl">
+                <h2 className="text-3xl font-bold mb-6 text-card-foreground">Chat with Song</h2>
                 <ChatInterface songTitle={songTitle} artistName={artistName} />
               </section>
             </div>
