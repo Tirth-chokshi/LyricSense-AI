@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const ChatInterface = ({ songTitle, artistName }) => {
   const [messages, setMessages] = useState([]);
@@ -22,7 +23,6 @@ const ChatInterface = ({ songTitle, artistName }) => {
         songTitle: songTitle,
       };
 
-      // Only include artistName if it's provided and not empty
       if (artistName && artistName.trim() !== '') {
         requestBody.artistName = artistName;
       }
@@ -52,33 +52,33 @@ const ChatInterface = ({ songTitle, artistName }) => {
   };
 
   return (
-    <div className="flex flex-col h-[400px] border rounded-lg">
-      <div className="flex-1 overflow-y-auto p-4">
+    <div className="bg-card rounded-lg shadow-lg p-6 mb-12">
+      <ScrollArea className="h-[400px] mb-4 p-4 border rounded-lg">
         {messages.map((message, index) => (
-          <div key={index} className={`mb-2 ${message.sender === 'user' ? 'text-right' : 'text-left'}`}>
-            <span className={`inline-block p-2 rounded-lg ${message.sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black dark:bg-gray-700 dark:text-white'}`}>
-              {message.text}
-            </span>
+          <div
+            key={index}
+            className={`mb-4 p-3 rounded-lg ${
+              message.sender === 'user' ? 'bg-primary text-primary-foreground ml-auto' : 'bg-secondary text-secondary-foreground'
+            } max-w-[80%] ${message.sender === 'user' ? 'text-right' : 'text-left'}`}
+          >
+            {message.text}
           </div>
         ))}
         {isLoading && (
-          <div className="text-center">
-            <span className="inline-block p-2 rounded-lg bg-gray-200 text-black dark:bg-gray-700 dark:text-white">
-              Thinking...
-            </span>
+          <div className="text-center text-muted-foreground">
+            Thinking...
           </div>
         )}
-      </div>
-      <form onSubmit={handleSubmit} className="flex p-4">
+      </ScrollArea>
+      <form onSubmit={handleSubmit} className="flex gap-2">
         <Input
-          type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="flex-1 p-2 border rounded-lg"
+          className="flex-1"
           placeholder="Type your message..."
           disabled={isLoading}
         />
-        <Button type="submit" className="ml-2" disabled={isLoading || !songTitle}>
+        <Button type="submit" disabled={isLoading || !input.trim()}>
           Send
         </Button>
       </form>

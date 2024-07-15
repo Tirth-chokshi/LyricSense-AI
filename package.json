@@ -34,6 +34,7 @@
     "react-markdown": "^9.0.1",
     "react-wordcloud": "^1.2.7",
     "recharts": "^2.12.7",
+    "remark-gfm": "^4.0.0",
     "stopwords-en": "^0.3.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7"

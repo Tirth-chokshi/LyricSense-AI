@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import Keywords from "@/components/Keywords"
 import Analysis from "@/components/Analysis"
 import ChatInterface from '@/components/ChatInterface'
+import { ComingSoonSection } from '@/components/ComingSoonSection'
 // import EmotionGraph from '@/components/EmotionGraph'
 import {
   DropdownMenu,
@@ -149,10 +150,13 @@ export default function Home() {
             </div>
           ) : submitted && (
             <div className="space-y-12 animate-fadeIn">
-              <section className="bg-card rounded-lg shadow-lg p-8 transition-all hover:shadow-xl">
+              {/* <section className="bg-card rounded-lg shadow-lg p-8 transition-all hover:shadow-xl"> */}
                 <h2 className="text-3xl font-bold mb-6 text-card-foreground">Interpretation</h2>
                 <div className="grid gap-8 md:grid-cols-2">
                   <div className="youtube-container">
+                  <h3 className="flex justify-center items-center text-2xl font-semibold mb-4 text-primary/80">
+                    Golden Minute
+                  </h3>
                     {youtubeUrl && (
                       <iframe
                         className="w-full h-full rounded-md shadow-md"
@@ -164,24 +168,27 @@ export default function Home() {
                       ></iframe>
                     )}
                   </div>
-                  <div className="bg-popover rounded-md p-6 shadow-inner">
+                  {/* <div className="bg-popover rounded-md p-6 shadow-inner"> */}
                     <Keywords keywords={keywordsResponse} />
-                  </div>
+                  {/* </div> */}
                 </div>
-              </section>
+              {/* </section> */}
 
-              <section className="bg-card rounded-lg shadow-lg p-8 transition-all hover:shadow-xl">
-                <h2 className="text-3xl font-bold mb-6 text-card-foreground">Overall Analysis</h2>
+              {/* <section className="bg-card rounded-lg shadow-lg p-8 transition-all hover:shadow-xl"> */}
+                <h2 className="text-3xl font-bold mb-6 text-card-foreground">Detailed Analysis</h2>
                 <Analysis analysis={analysisResponse} />
-              </section>
+              {/* </section> */}
 
-              <section className="bg-card rounded-lg shadow-lg p-8 transition-all hover:shadow-xl">
+              {/* <section className="bg-card rounded-lg shadow-lg p-8 transition-all hover:shadow-xl"> */}
                 <h2 className="text-3xl font-bold mb-6 text-card-foreground">Chat with Song</h2>
                 <ChatInterface songTitle={songTitle} artistName={artistName} />
-              </section>
+              {/* </section> */}
             </div>
           )}
         </main>
+        <div className='mt-12' >
+        <ComingSoonSection />
+        </div>
       </div>
     </div>
   )
