@@ -20,11 +20,11 @@ export const ComingSoonSection = () => {
 
   const features = [
     { title: "Dynamic Song Search", description: "Search for songs dynamically as you type" },
+    { title: "Popular Songs", description: "See current popular song's insights" },
     { title: "Emotion Graph", description: "Visualize emotional progression throughout the song" },
     { title: "Word Cloud", description: "See the most prominent words in the lyrics" },
     { title: "Sentiment Timeline", description: "Track sentiment changes across the song" },
     { title: "Rhyme Scheme Analysis", description: "Understand the song's rhyming structure" },
-    { title: "Interactive Lyrics", description: "Explore lyrics with line-by-line insights" },
   ]
 
   const filteredFeatures = features.filter(feature =>
