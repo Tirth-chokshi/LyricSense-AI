@@ -65,27 +65,3 @@ export async function handleChat(req, res) {
     res.status(405).json({ error: 'Method not allowed' });
   }
 }
-
-export async function fetchSummary(req, res) {
-  const { lyrics } = req.body;
-  const prompt = `${process.env.ANALYSIS_PROMPT} ${lyrics}`;
-  const response = await getGroqChatCompletion(prompt);
-  res.status(200).json({ summary: response.choices[0].message.content });
-}
-
-export async function fetchMoodsThemes(req, res) {
-  const { lyrics } = req.body;
-  const prompt = `${process.env.KEYWORD_PROMPT} ${lyrics}`;
-  const response = await getGroqChatCompletion(prompt);
-  res.status(200).json({ moodsThemes: response.choices[0].message.content });
-}
-
-export async function fetchLanguageExplicit(req, res) {
-  const { lyrics } = req.body;
-  const prompt = `${process.env.LANG_PROMPT} ${lyrics}`;
-  const response = await getGroqChatCompletion(prompt);
-  res.status(200).json({
-    language: response.choices[0].message.content.language,
-    explicit: response.choices[0].message.content.explicit,
-  });
-}
