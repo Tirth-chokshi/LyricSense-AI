@@ -52,8 +52,8 @@ const ChatInterface = ({ songTitle, artistName }) => {
   };
 
   return (
-    <div className="bg-card rounded-lg shadow-lg p-6 mb-12">
-      <ScrollArea className="h-[400px] mb-4 p-4 border rounded-lg">
+    <div>
+      <ScrollArea>
         {messages.map((message, index) => (
           <div
             key={index}

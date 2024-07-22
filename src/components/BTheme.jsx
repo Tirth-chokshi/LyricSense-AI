@@ -7,8 +7,10 @@ import {
     DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
 import { Button } from './ui/button'
+import { useTheme } from 'next-themes'
 
 export default function BTheme() {
+    const { setTheme } = useTheme()
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>

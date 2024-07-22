@@ -13,7 +13,7 @@ const Analysis = ({ analysis }) => {
   useEffect(() => {
     if (contentRef.current) {
       const lineHeight = parseInt(window.getComputedStyle(contentRef.current).lineHeight);
-      const maxHeight = lineHeight * 20; // 20 lines
+      const maxHeight = lineHeight * 20;
       setShowExpandButton(contentRef.current.scrollHeight > maxHeight);
     }
   }, [analysis]);
