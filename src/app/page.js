@@ -1,7 +1,6 @@
 "use client"
 import { useState } from 'react'
 import axios from 'axios'
-import { useTheme } from "next-themes"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Keywords from "@/components/Keywords"
@@ -19,14 +18,6 @@ export default function Home() {
   const [moodsAndThemes, setMoodsAndThemes] = useState(null)
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  // const [emotionData, setEmotionData] = useState([])
-  // const [wordCloudData, setWordCloudData] = useState([])
-  // const [sentimentData, setSentimentData] = useState([])
-  // const [themeData, setThemeData] = useState([])
-  // const [rhymeData, setRhymeData] = useState({})
-  // const [lyricsData, setLyricsData] = useState([])
-
-  const { setTheme } = useTheme()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -44,12 +35,6 @@ export default function Home() {
       setAnalysisResponse(analysisRes.data.overallAnalysis)
       setYoutubeUrl(keywordsRes.data.youtubeUrl)
       setMoodsAndThemes(keywordsRes.data.moodsAndThemes)
-      // setEmotionData(analysisRes.data.emotionData)
-      // setWordCloudData(analysisRes.data.wordCloudData || [])
-      // setSentimentData(analysisRes.data.sentimentData || [])
-      // setThemeData(analysisRes.data.themeData || [])
-      // setRhymeData(analysisRes.data.rhymeData || {})
-      // setLyricsData(analysisRes.data.lyricsData || [])
 
       setSubmitted(true)
     } catch (error) {
@@ -125,7 +110,6 @@ export default function Home() {
             </div>
           ) : submitted && (
             <div className="space-y-12 animate-fadeIn">
-              {/* <section className="bg-card rounded-lg shadow-lg p-8 transition-all hover:shadow-xl"> */}
                 <h2 className="text-3xl font-bold mb-6 text-card-foreground">Interpretation</h2>
                 <div className="grid gap-8 md:grid-cols-2">
                   <div className="youtube-container">
@@ -143,21 +127,14 @@ export default function Home() {
                       ></iframe>
                     )}
                   </div>
-                  {/* <div className="bg-popover rounded-md p-6 shadow-inner"> */}
                     <Keywords keywords={keywordsResponse} />
-                  {/* </div> */}
                 </div>
-              {/* </section> */}
 
-              {/* <section className="bg-card rounded-lg shadow-lg p-8 transition-all hover:shadow-xl"> */}
                 <h2 className="text-3xl font-bold mb-6 text-card-foreground">Detailed Analysis</h2>
                 <Analysis analysis={analysisResponse} />
-              {/* </section> */}
 
-              {/* <section className="bg-card rounded-lg shadow-lg p-8 transition-all hover:shadow-xl"> */}
                 <h2 className="text-3xl font-bold mb-6 text-card-foreground">Chat with Lyrics</h2>
                 <ChatInterface songTitle={songTitle} artistName={artistName} />
-              {/* </section> */}
             </div>
           )}
         </main>
