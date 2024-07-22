@@ -34,7 +34,7 @@ export const ComingSoonSection = () => {
 
   return (
     <section className="bg-card rounded-lg shadow-lg p-4 transition-all hover:shadow-xl">
-      <h2 className="text-2xl font-bold mb-4 text-card-foreground">Coming Soon...</h2>
+      <h2 className="text-2xl font-bold mb-4 text-card-foreground">Upcoming features...</h2>
       <ul className="grid gap-2 md:grid-cols-2 lg:grid-cols-3">
         {filteredFeatures.map((feature, index) => (
           <ComingSoonFeature key={index} title={feature.title} description={feature.description} />

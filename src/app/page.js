@@ -155,7 +155,7 @@ export default function Home() {
               {/* </section> */}
 
               {/* <section className="bg-card rounded-lg shadow-lg p-8 transition-all hover:shadow-xl"> */}
-                <h2 className="text-3xl font-bold mb-6 text-card-foreground">Chat with Song</h2>
+                <h2 className="text-3xl font-bold mb-6 text-card-foreground">Chat with Lyrics</h2>
                 <ChatInterface songTitle={songTitle} artistName={artistName} />
               {/* </section> */}
             </div>
