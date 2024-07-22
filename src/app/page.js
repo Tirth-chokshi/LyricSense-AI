@@ -1,16 +1,14 @@
 "use client"
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback } from 'react'
 import debounce from 'lodash/debounce'
 import axios from 'axios'
 import { useTheme } from "next-themes"
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
 import Keywords from "@/components/Keywords"
 import Analysis from "@/components/Analysis"
 import ChatInterface from '@/components/ChatInterface'
 import { ComingSoonSection } from '@/components/ComingSoonSection'
 import BTheme from '@/components/BTheme'
-import { Search, X } from 'lucide-react'
 
 export default function Home() {
   const [songTitle, setSongTitle] = useState('')
@@ -23,15 +21,14 @@ export default function Home() {
   const [submitted, setSubmitted] = useState(false)
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  // const [emotionData, setEmotionData] = useState([])
+  // const [wordCloudData, setWordCloudData] = useState([])
+  // const [sentimentData, setSentimentData] = useState([])
+  // const [themeData, setThemeData] = useState([])
+  // const [rhymeData, setRhymeData] = useState({})
+  // const [lyricsData, setLyricsData] = useState([])
 
-  const { setTheme, theme } = useTheme()
-
-  useEffect(() => {
-    // Apply gradient style based on theme
-    document.body.className = theme === 'dark' 
-      ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'
-      : 'bg-gradient-to-br from-rose-100 via-teal-100 to-lavender-200';
-  }, [theme]);
+  const { setTheme } = useTheme()
 
   const debouncedSearch = useCallback(
     debounce((query) => handleSearch(query), 300),
@@ -65,8 +62,10 @@ export default function Home() {
   const handleSongSelection = async (result) => {
     setSongTitle(result.title);
     setArtistName(result.artist);
-    setSearchQuery('');
-    setSearchResults([]);
+    setSearchQuery(''); // Clear the search query
+    setSearchResults([]); // Clear the search results
+
+    // Trigger analysis immediately
     await handleSubmit(null, result.title, result.artist);
   };
 
@@ -98,7 +97,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background">
       <div className="container mx-auto px-4 py-8">
         <header className="flex justify-between items-center mb-12">
           <div className="flex-grow"></div>
@@ -110,42 +109,26 @@ export default function Home() {
           </div>
         </header>
 
-        <div className="relative mb-8">
-          <Input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              debouncedSearch(e.target.value);
-            }}
-            placeholder="Search for a song"
-            className="w-full pl-10 pr-10 py-2 border rounded-md bg-gradient-to-r from-background to-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
-          />
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          {searchQuery && (
-            <Button
-              onClick={() => {
-                setSearchQuery('');
-                setSearchResults([]);
-              }}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1"
-              variant="ghost"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          )}
-        </div>
+        <Input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            debouncedSearch(e.target.value);
+          }}
+          placeholder="Search for a song"
+          className="w-full pl-4 pr-10 py-2 border rounded-md bg-gradient-to-r from-background to-secondary/50 focus:outline-none focus:ring-2 focus:ring-primary/50"
+        />
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-4">
           {searchResults.map((result) => (
             <div
               key={result.id}
-              className="bg-card p-4 rounded-lg shadow cursor-pointer hover:shadow-md transition-shadow transform hover:scale-105 transition-transform duration-200"
+              className="bg-card p-4 rounded-lg shadow cursor-pointer hover:shadow-md transition-shadow"
               onClick={() => handleSongSelection(result)}
             >
               <img src={result.albumArt} alt={result.fullTitle} className="w-full h-40 object-cover rounded-md mb-2" />
-              <h3 className="font-bold text-primary">{result.title}</h3>
-              <p className="text-sm text-muted-foreground">{result.artist}</p>
+              <h3 className="font-bold">{result.fullTitle}</h3>
             </div>
           ))}
         </div>
@@ -153,19 +136,20 @@ export default function Home() {
         <main>
           {loading ? (
             <div className="flex justify-center items-center h-64">
-              <div className="loader"></div>
+              <span className="loader"></span>
             </div>
           ) : submitted && (
             <div className="space-y-12 animate-fadeIn">
-              <h2 className="text-3xl font-bold mb-6 text-primary">Interpretation</h2>
+              {/* <section className="bg-card rounded-lg shadow-lg p-8 transition-all hover:shadow-xl"> */}
+              <h2 className="text-3xl font-bold mb-6 text-card-foreground">Interpretation</h2>
               <div className="grid gap-8 md:grid-cols-2">
-                <div className="youtube-container bg-card rounded-lg overflow-hidden shadow-lg">
-                  <h3 className="text-2xl font-semibold mb-4 text-primary p-4">
+                <div className="youtube-container">
+                  <h3 className="flex justify-center items-center text-2xl font-semibold mb-4 text-primary/80">
                     Golden Minute
                   </h3>
                   {youtubeUrl && (
                     <iframe
-                      className="w-full aspect-video rounded-b-lg"
+                      className="w-full h-full rounded-md shadow-md"
                       src={youtubeUrl}
                       title="YouTube video player"
                       frameBorder="0"
@@ -174,14 +158,21 @@ export default function Home() {
                     ></iframe>
                   )}
                 </div>
+                  {/* <div className="bg-popover rounded-md p-6 shadow-inner"> */}
                 <Keywords keywords={keywordsResponse} />
+                  {/* </div> */}
               </div>
+              {/* </section> */}
 
-              <h2 className="text-3xl font-bold mb-6 text-primary">Detailed Analysis</h2>
+              {/* <section className="bg-card rounded-lg shadow-lg p-8 transition-all hover:shadow-xl"> */}
+              <h2 className="text-3xl font-bold mb-6 text-card-foreground">Detailed Analysis</h2>
               <Analysis analysis={analysisResponse} />
+              {/* </section> */}
 
-              <h2 className="text-3xl font-bold mb-6 text-primary">Chat with Song</h2>
+              {/* <section className="bg-card rounded-lg shadow-lg p-8 transition-all hover:shadow-xl"> */}
+              <h2 className="text-3xl font-bold mb-6 text-card-foreground">Chat with Song</h2>
               <ChatInterface songTitle={songTitle} artistName={artistName} />
+              {/* </section> */}
             </div>
           )}
         </main>
