@@ -63,7 +63,10 @@ export default async function handler(req, res) {
       // Perform overall analysis
       try {
         const analysisPrompt = process.env.ANALYSIS_PROMPT;
-        const overallAnalysisPrompt = `${analysisPrompt} ${lyrics}`;
+        const overallAnalysisPrompt = `${analysisPrompt} 
+        Song Title: "${songTitle}"
+        Artist: "${artistName}"
+        Lyrics: ${lyrics}`;
         overallAnalysis = await analysisgetGroqChatCompletion(overallAnalysisPrompt);
       } catch (error) {
         console.error('Error performing overall analysis:', error);
