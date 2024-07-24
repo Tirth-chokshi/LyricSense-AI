@@ -57,10 +57,10 @@ export default function Home() {
         axios.post('/api/analysis', { songTitle: title, artistName: artist })
       ]);
 
-      setKeywordsResponse(keywordsRes.data.response);
-      setAnalysisResponse(analysisRes.data.overallAnalysis);
-      setYoutubeUrl(keywordsRes.data.youtubeUrl);
-      setMoodsAndThemes(keywordsRes.data.moodsAndThemes);
+      setKeywordsResponse(keywordsRes.data.response)
+      setAnalysisResponse(analysisRes.data.overallAnalysis)
+      setYoutubeUrl(keywordsRes.data.youtubeUrl)
+      setMoodsAndThemes(keywordsRes.data.moodsAndThemes)
 
       setSubmitted(true);
     } catch (error) {
