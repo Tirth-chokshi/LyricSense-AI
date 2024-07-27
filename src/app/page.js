@@ -10,7 +10,7 @@ import { Lightbulb, Music, Disc3, TrendingUp } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { motion } from 'framer-motion'
+import { motion,AnimatePresence } from 'framer-motion'
 import TrendingSongs from '@/components/TrendingSongs'
 
 export default function Home() {
@@ -100,7 +100,18 @@ export default function Home() {
         <SearchBar onSearch={handleSearch} onSelect={handleSongSelection} selectedSong={selectedSong} />
         
         <main className="mt-8">
-        <TrendingSongs songs={trendingSongs} onSelect={handleSongSelection} />
+        <AnimatePresence mode="wait">
+            {!selectedSong && (
+              <motion.div
+                key="trending"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+              >
+                <TrendingSongs songs={trendingSongs} onSelect={handleSongSelection} />
+              </motion.div>
+            )}
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <span className="loader"></span>
@@ -160,6 +171,7 @@ export default function Home() {
               <ChatInterface songTitle={songTitle} artistName={artistName} />
             </div>
           )}
+          </AnimatePresence>
         </main>
 
         {/* <div className='mt-12'>
