@@ -1,7 +1,6 @@
 "use client"
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { useTheme } from "next-themes"
 import Keywords from "@/components/Keywords"
 import Analysis from "@/components/Analysis"
 import ChatInterface from '@/components/ChatInterface'
@@ -9,6 +8,10 @@ import { ComingSoonSection } from '@/components/ComingSoonSection'
 import BTheme from '@/components/BTheme'
 import SearchBar from '@/components/SearchBar'
 import { Lightbulb } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Music } from 'lucide-react';
+import { Separator } from "@/components/ui/separator"
+// import TrendingSongs from '@/components/TrendingSongs'
 
 export default function Home() {
   const [songTitle, setSongTitle] = useState('')
@@ -20,9 +23,11 @@ export default function Home() {
   const [moodsAndThemes, setMoodsAndThemes] = useState(null)
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [trendingSongs, setTrendingSongs] = useState([])
 
-  const { setTheme } = useTheme()
-
+  // useEffect(() => {
+  //   fetchTrendingSongs()
+  // }, [])
   const handleSearch = async (query) => {
     try {
       const response = await axios.post('/api/search', { songTitle: query });
@@ -37,7 +42,14 @@ export default function Home() {
       return [];
     }
   };
-
+  // const fetchTrendingSongs = async () => {
+  //   try {
+  //     const response = await axios.get('/api/trending-songs')
+  //     setTrendingSongs(response.data.songs)
+  //   } catch (error) {
+  //     console.error('Error fetching trending songs:', error)
+  //   }
+  // }
   const handleSongSelection = async (result) => {
     setSongTitle(result.title);
     setArtistName(result.artist);
@@ -86,7 +98,7 @@ export default function Home() {
         </header>
 
         <SearchBar onSearch={handleSearch} onSelect={handleSongSelection} selectedSong={selectedSong} />
-
+        {/* <TrendingSongs songs={trendingSongs} onSelect={handleSongSelection} /> */}
         <main className="mt-8">
           {loading ? (
             <div className="flex justify-center items-center h-64">
@@ -94,7 +106,30 @@ export default function Home() {
             </div>
           ) : submitted && (
             <div className="space-y-12 animate-fadeIn">
-              <h2 className="text-3xl font-bold mb-6 text-card-foreground">Interpretation</h2><Lightbulb/>
+              <Card className="col-span-2 md:col-span-1">
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Music className="mr-2" /> Song Details
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {selectedSong && (
+                    <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
+                      <img
+                        src={selectedSong.albumArt}
+                        alt={selectedSong.fullTitle}
+                        className="w-32 h-32 object-cover rounded-md"
+                      />
+                      <div>
+                        <h3 className="text-xl font-semibold">{selectedSong.title}</h3>
+                        <p className="text-muted-foreground">{selectedSong.artist}</p>
+                        <p className="text-sm text-muted-foreground mt-2">{selectedSong.fullTitle}</p>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+              <h2 className="text-3xl font-bold mb-6 text-card-foreground">Interpretation</h2><Lightbulb />
               <div className="grid gap-8 md:grid-cols-2">
                 <div className="youtube-container">
                   {/* <h3 className="flex justify-center items-center text-2xl font-semibold mb-4 text-primary/80">
@@ -102,14 +137,14 @@ export default function Home() {
                   </h3> */}
                   {youtubeUrl && (
                     <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
-                    <iframe
-                      className="absolute top-0 left-0 w-full h-full"
-                      src={youtubeUrl}
-                      title="YouTube video player"
-                      frameBorder="0"
-                      allow="accelerometer autoplay clipboard-write encrypted-media gyroscope picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
+                      <iframe
+                        className="absolute top-0 left-0 w-full h-full"
+                        src={youtubeUrl}
+                        title="YouTube video player"
+                        frameBorder="0"
+                        allow="accelerometer autoplay clipboard-write encrypted-media gyroscope picture-in-picture"
+                        allowFullScreen
+                      ></iframe>
                     </div>
                   )}
                 </div>
@@ -125,9 +160,9 @@ export default function Home() {
           )}
         </main>
 
-        <div className='mt-12'>
+        {/* <div className='mt-12'>
           <ComingSoonSection />
-        </div>
+        </div> */}
       </div>
     </div>
   )

@@ -15,7 +15,7 @@ export async function keywordsgetGroqChatCompletion(yourOriginalPrompt) {
     ],
     // model: 'gemma-7b-it',
     model: 'llama3-70b-8192',
-    // model: 'llama3-8b-8192',
+    // model: 'gemma2-9b-it',
   });
 }
 export async function analysisgetGroqChatCompletion(yourOriginalPrompt) {
@@ -29,7 +29,7 @@ export async function analysisgetGroqChatCompletion(yourOriginalPrompt) {
     ],
     model: 'gemma-7b-it',
     // model: 'llama3-70b-8192',
-    // model: 'llama3-8b-8192',
+    // model: 'gemma2-9b-it',
   });
 }
 export default async function fetchLyrics(arg) {

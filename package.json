@@ -22,6 +22,7 @@
     "cheerio-without-node-native": "^1.0.0-rc.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "color-thief-node": "^1.0.4",
     "dotenv": "^16.4.5",
     "framer-motion": "^11.3.8",
     "franc": "^6.2.0",
