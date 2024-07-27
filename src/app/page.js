@@ -4,14 +4,14 @@ import axios from 'axios'
 import Keywords from "@/components/Keywords"
 import Analysis from "@/components/Analysis"
 import ChatInterface from '@/components/ChatInterface'
-import { ComingSoonSection } from '@/components/ComingSoonSection'
 import BTheme from '@/components/BTheme'
 import SearchBar from '@/components/SearchBar'
-import { Lightbulb } from 'lucide-react'
+import { Lightbulb, Music, Disc3, TrendingUp } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Music } from 'lucide-react';
+import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-// import TrendingSongs from '@/components/TrendingSongs'
+import { motion } from 'framer-motion'
+import TrendingSongs from '@/components/TrendingSongs'
 
 export default function Home() {
   const [songTitle, setSongTitle] = useState('')
@@ -25,9 +25,9 @@ export default function Home() {
   const [submitted, setSubmitted] = useState(false)
   const [trendingSongs, setTrendingSongs] = useState([])
 
-  // useEffect(() => {
-  //   fetchTrendingSongs()
-  // }, [])
+  useEffect(() => {
+    fetchTrendingSongs()
+  }, [])
   const handleSearch = async (query) => {
     try {
       const response = await axios.post('/api/search', { songTitle: query });
@@ -42,14 +42,14 @@ export default function Home() {
       return [];
     }
   };
-  // const fetchTrendingSongs = async () => {
-  //   try {
-  //     const response = await axios.get('/api/trending-songs')
-  //     setTrendingSongs(response.data.songs)
-  //   } catch (error) {
-  //     console.error('Error fetching trending songs:', error)
-  //   }
-  // }
+  const fetchTrendingSongs = async () => {
+    try {
+      const response = await axios.get('/api/trending-songs')
+      setTrendingSongs(response.data.songs)
+    } catch (error) {
+      console.error('Error fetching trending songs:', error)
+    }
+  }
   const handleSongSelection = async (result) => {
     setSongTitle(result.title);
     setArtistName(result.artist);
@@ -98,12 +98,14 @@ export default function Home() {
         </header>
 
         <SearchBar onSearch={handleSearch} onSelect={handleSongSelection} selectedSong={selectedSong} />
-        {/* <TrendingSongs songs={trendingSongs} onSelect={handleSongSelection} /> */}
+        
         <main className="mt-8">
+        <TrendingSongs songs={trendingSongs} onSelect={handleSongSelection} />
           {loading ? (
             <div className="flex justify-center items-center h-64">
               <span className="loader"></span>
             </div>
+            
           ) : submitted && (
             <div className="space-y-12 animate-fadeIn">
               <Card className="col-span-2 md:col-span-1">
