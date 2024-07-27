@@ -1,18 +1,29 @@
 "use client"
 import React from 'react';
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BarChart2 } from 'lucide-react';
+import { RadarChart } from "@tremor/react";
 
 const ThemeRadar = ({ themeData }) => {
   return (
-    <div style={{ width: '100%', height: 400 }}>
-      <ResponsiveContainer>
-        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={themeData}>
-          <PolarGrid />
-          <PolarAngleAxis dataKey="theme" />
-          <Radar name="Theme Prevalence" dataKey="value" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
-        </RadarChart>
-      </ResponsiveContainer>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center">
+          <BarChart2 className="mr-2" /> Theme Radar
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <RadarChart
+          className="h-[300px]"
+          data={themeData}
+          category="value"
+          index="theme"
+          colors={['blue']}
+          showLegend={false}
+          valueFormatter={(value) => `${value.toFixed(2)}`}
+        />
+      </CardContent>
+    </Card>
   );
 };
 

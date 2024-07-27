@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import {Tag} from 'lucide-react'
+import { Tag } from 'lucide-react';
 
 const Keywords = ({ keywords }) => {
   // Split the keywords string into moods and themes
@@ -36,7 +36,9 @@ const Keywords = ({ keywords }) => {
   return (
     <Card className="bg-gradient-to-br from-primary/10 to-secondary/10">
       <CardHeader>
-        <h3 className="text-xl font-semibold text-primary"><Tag className="mr-2" size={18} />Key Themes & Motifs</h3>
+        <h3 className="text-xl font-semibold text-primary">
+          <Tag className="mr-2" size={18} /> Key Themes & Motifs
+        </h3>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>

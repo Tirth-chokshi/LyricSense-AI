@@ -1,55 +1,28 @@
-"use client"
-import React, { useState } from 'react';
-import { Tooltip, TooltipProvider, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 
-const InteractiveLyrics = ({ lyricsData }) => {
-  const [activeWord, setActiveWord] = useState(null);
+const InteractiveLyrics = ({ lyrics, currentTime, duration }) => {
+  const [highlightedIndex, setHighlightedIndex] = useState(0);
+
+  useEffect(() => {
+    const lineCount = lyrics.length;
+    const newIndex = Math.floor((currentTime / duration) * lineCount);
+    setHighlightedIndex(newIndex);
+  }, [currentTime, duration, lyrics]);
 
   return (
-    <TooltipProvider>
-      <div className="interactive-lyrics">
-        {lyricsData.map((line, lineIndex) => (
-          <div key={lineIndex} className="line">
-            {line.words.map((word, wordIndex) => (
-              <Tooltip key={wordIndex}>
-                <TooltipTrigger asChild>
-                  <span 
-                    className="word"
-                    onMouseEnter={() => setActiveWord(`${lineIndex}-${wordIndex}`)}
-                    onMouseLeave={() => setActiveWord(null)}
-                  >
-                    {word.text}{' '}
-                  </span>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <div>
-                    <p>Part of Speech: {word.partOfSpeech}</p>
-                    <p>Sentiment: {word.sentiment}</p>
-                    {word.definition && <p>Definition: {word.definition}</p>}
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-            ))}
-          </div>
-        ))}
-        <style jsx>{`
-          .interactive-lyrics {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-          }
-          .line {
-            margin-bottom: 10px;
-          }
-          .word {
-            cursor: pointer;
-          }
-          .word:hover {
-            background-color: #f0f0f0;
-          }
-        `}</style>
-      </div>
-    </TooltipProvider>
+    <div className="h-64 overflow-y-auto p-4 bg-card rounded-lg shadow-inner">
+      {lyrics.map((line, index) => (
+        <motion.div
+          key={index}
+          className={`text-lg mb-2 ${index === highlightedIndex ? 'text-primary font-bold' : 'text-foreground'}`}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+        >
+          {line}
+        </motion.div>
+      ))}
+    </div>
   );
 };
-
-export default InteractiveLyrics;

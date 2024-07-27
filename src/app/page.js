@@ -6,12 +6,11 @@ import Analysis from "@/components/Analysis"
 import ChatInterface from '@/components/ChatInterface'
 import BTheme from '@/components/BTheme'
 import SearchBar from '@/components/SearchBar'
-import { Lightbulb, Music, Disc3, TrendingUp } from 'lucide-react'
+import { Lightbulb, Music, Disc3, TrendingUp, BookOpen, MessageCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { motion,AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import TrendingSongs from '@/components/TrendingSongs'
+import EmotionGraph from '@/components/EmotionGraph'
 
 export default function Home() {
   const [songTitle, setSongTitle] = useState('')
@@ -142,12 +141,11 @@ export default function Home() {
                   )}
                 </CardContent>
               </Card>
-              <h2 className="text-3xl font-bold mb-6 text-card-foreground">Interpretation</h2><Lightbulb />
+              <h2 className="text-3xl font-bold mb-6 text-card-foreground flex items-center">
+                <Lightbulb className="mr-2" /> Interpretation
+              </h2>
               <div className="grid gap-8 md:grid-cols-2">
                 <div className="youtube-container">
-                  {/* <h3 className="flex justify-center items-center text-2xl font-semibold mb-4 text-primary/80">
-                    Golden Minute
-                  </h3> */}
                   {youtubeUrl && (
                     <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
                       <iframe
@@ -164,19 +162,19 @@ export default function Home() {
                 <Keywords keywords={keywordsResponse} />
               </div>
 
-              <h2 className="text-3xl font-bold mb-6 text-card-foreground">Detailed Analysis</h2>
+              <h2 className="text-3xl font-bold mb-6 text-card-foreground flex items-center">
+                <TrendingUp className="mr-2" /> Detailed Analysis
+              </h2>
               <Analysis analysis={analysisResponse} />
 
-              <h2 className="text-3xl font-bold mb-6 text-card-foreground">Chat with Song</h2>
+              <h2 className="text-3xl font-bold mb-6 text-card-foreground flex items-center">
+                <MessageCircle className="mr-2" /> Chat with Song
+              </h2>
               <ChatInterface songTitle={songTitle} artistName={artistName} />
             </div>
           )}
           </AnimatePresence>
         </main>
-
-        {/* <div className='mt-12'>
-          <ComingSoonSection />
-        </div> */}
       </div>
     </div>
   )
