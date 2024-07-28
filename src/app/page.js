@@ -10,8 +10,6 @@ import { Lightbulb, Music, Disc3, TrendingUp, BookOpen, MessageCircle } from 'lu
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { motion, AnimatePresence } from 'framer-motion'
 import TrendingSongs from '@/components/TrendingSongs'
-import EmotionGraph from '@/components/EmotionGraph'
-
 export default function Home() {
   const [songTitle, setSongTitle] = useState('')
   const [artistName, setArtistName] = useState('')
@@ -95,7 +93,6 @@ export default function Home() {
             <BTheme />
           </div>
         </header>
-
         <SearchBar onSearch={handleSearch} onSelect={handleSongSelection} selectedSong={selectedSong} />
         
         <main className="mt-8">
