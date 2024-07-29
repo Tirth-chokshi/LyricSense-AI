@@ -5,11 +5,11 @@ export default async function handler(req, res) {
     try {
       // List of trending songs with both title and artist
       const trendingSongs = [
-        { title: "Blinding Lights", artist: "The Weeknd" },
-        { title: "Shape of You", artist: "Ed Sheeran" },
-        { title: "Dance Monkey", artist: "Tones and I" },
-        { title: "Someone You Loved", artist: "Lewis Capaldi" },
-        { title: "Rockstar", artist: "Post Malone" }
+        { title: "Please Please Please", artist: "Sabrina Carpenter" },
+        { title: "Birds of a feather", artist: "Billie Eilish" },
+        { title: "MILLION DOLLAR BABY", artist: "Tommy Richman" },
+        { title: "Not Like Us", artist: "Kendirck Lamar" },
+        { title: "Too Sweet", artist: "Hozier" }
       ];
 
       // Fetch details for each trending song
