@@ -84,94 +84,93 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background">
       <div className="container mx-auto px-4 py-8">
-        <header className="flex justify-between items-center mb-12">
-          <div className="flex-grow"></div>
+        <header className="relative flex justify-center items-center mb-12">
           <h1 className="text-center text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-foreground">
             LyricSense AI
           </h1>
-          <div className="flex-grow flex justify-end">
+          <div className="absolute right-0 top-1/2 transform -translate-y-1/2">
             <BTheme />
           </div>
         </header>
-        <SearchBar onSearch={handleSearch} onSelect={handleSongSelection} selectedSong={selectedSong} />
-        
-        <main className="mt-8">
-        <AnimatePresence mode="wait">
-            {!selectedSong && (
-              <motion.div
-                key="trending"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.5 }}
-              >
-                <TrendingSongs songs={trendingSongs} onSelect={handleSongSelection} />
-              </motion.div>
-            )}
-          {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <span className="loader"></span>
-            </div>
-            
-          ) : submitted && (
-            <div className="space-y-12 animate-fadeIn">
-              <Card className="col-span-2 md:col-span-1">
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Music className="mr-2" /> Song Details
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {selectedSong && (
-                    <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
-                      <img
-                        src={selectedSong.albumArt}
-                        alt={selectedSong.fullTitle}
-                        className="w-32 h-32 object-cover rounded-md"
-                      />
-                      <div>
-                        <h3 className="text-xl font-semibold">{selectedSong.title}</h3>
-                        <p className="text-muted-foreground">{selectedSong.artist}</p>
-                        <p className="text-sm text-muted-foreground mt-2">{selectedSong.fullTitle}</p>
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-              <h2 className="text-3xl font-bold mb-6 text-card-foreground flex items-center">
-                <Lightbulb className="mr-2" /> Interpretation
-              </h2>
-              <div className="grid gap-8 md:grid-cols-2">
-                <div className="youtube-container">
-                  {youtubeUrl && (
-                    <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
-                      <iframe
-                        className="absolute top-0 left-0 w-full h-full"
-                        src={youtubeUrl}
-                        title="YouTube video player"
-                        frameBorder="0"
-                        allow="accelerometer autoplay clipboard-write encrypted-media gyroscope picture-in-picture"
-                        allowFullScreen
-                      ></iframe>
-                    </div>
-                  )}
+          <SearchBar onSearch={handleSearch} onSelect={handleSongSelection} selectedSong={selectedSong} />
+
+          <main className="mt-8">
+            <AnimatePresence mode="wait">
+              {!selectedSong && (
+                <motion.div
+                  key="trending"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <TrendingSongs songs={trendingSongs} onSelect={handleSongSelection} />
+                </motion.div>
+              )}
+              {loading ? (
+                <div className="flex justify-center items-center h-64">
+                  <span className="loader"></span>
                 </div>
-                <Keywords keywords={keywordsResponse} />
-              </div>
 
-              <h2 className="text-3xl font-bold mb-6 text-card-foreground flex items-center">
-                <TrendingUp className="mr-2" /> Detailed Analysis
-              </h2>
-              <Analysis analysis={analysisResponse} />
+              ) : submitted && (
+                <div className="space-y-12 animate-fadeIn">
+                  <Card className="col-span-2 md:col-span-1">
+                    <CardHeader>
+                      <CardTitle className="flex items-center">
+                        <Music className="mr-2" /> Song Details
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      {selectedSong && (
+                        <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
+                          <img
+                            src={selectedSong.albumArt}
+                            alt={selectedSong.fullTitle}
+                            className="w-32 h-32 object-cover rounded-md"
+                          />
+                          <div>
+                            <h3 className="text-xl font-semibold">{selectedSong.title}</h3>
+                            <p className="text-muted-foreground">{selectedSong.artist}</p>
+                            <p className="text-sm text-muted-foreground mt-2">{selectedSong.fullTitle}</p>
+                          </div>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                  <h2 className="text-3xl font-bold mb-6 text-card-foreground flex items-center">
+                    <Lightbulb className="mr-2" /> Interpretation
+                  </h2>
+                  <div className="grid gap-8 md:grid-cols-2">
+                    <div className="youtube-container">
+                      {youtubeUrl && (
+                        <div className="relative w-full" style={{ paddingTop: '56.25%' }}>
+                          <iframe
+                            className="absolute top-0 left-0 w-full h-full"
+                            src={youtubeUrl}
+                            title="YouTube video player"
+                            frameBorder="0"
+                            allow="accelerometer autoplay clipboard-write encrypted-media gyroscope picture-in-picture"
+                            allowFullScreen
+                          ></iframe>
+                        </div>
+                      )}
+                    </div>
+                    <Keywords keywords={keywordsResponse} />
+                  </div>
 
-              <h2 className="text-3xl font-bold mb-6 text-card-foreground flex items-center">
-                <MessageCircle className="mr-2" /> Chat with Song
-              </h2>
-              <ChatInterface songTitle={songTitle} artistName={artistName} />
-            </div>
-          )}
-          </AnimatePresence>
-        </main>
+                  <h2 className="text-3xl font-bold mb-6 text-card-foreground flex items-center">
+                    <TrendingUp className="mr-2" /> Detailed Analysis
+                  </h2>
+                  <Analysis analysis={analysisResponse} />
+
+                  <h2 className="text-3xl font-bold mb-6 text-card-foreground flex items-center">
+                    <MessageCircle className="mr-2" /> Chat with Song
+                  </h2>
+                  <ChatInterface songTitle={songTitle} artistName={artistName} />
+                </div>
+              )}
+            </AnimatePresence>
+          </main>
       </div>
     </div>
   )
