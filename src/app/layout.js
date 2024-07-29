@@ -8,7 +8,7 @@ export const metadata = {
   title: "LyricSense AI",
   description: "Get your favorite songs analytics",
   icons: {
-    icon: '/lab-flask.svg',
+    icon: '/favicon.svg',
   },
 };
 
