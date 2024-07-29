@@ -48,6 +48,12 @@
     --ring: 346.8 77.2% 49.8%;
   }
 }
+
+input[type="text"],
+input[type="search"] {
+  color: hsl(var(--foreground));
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }

@@ -50,7 +50,7 @@ const SearchBar = ({ onSearch, onSelect, selectedSong }) => {
           value={searchQuery}
           onChange={handleInputChange}
           placeholder={selectedSong ? `${selectedSong.title} - ${selectedSong.artist}` : "Search for songs or artists"}
-          className="pl-10 pr-10 py-3 w-full bg-secondary text-primary-foreground rounded-full focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300"
+          className="pl-10 pr-10 py-3 w-full bg-secondary text-foreground placeholder-muted-foreground rounded-full focus:outline-none focus:ring-2 focus:ring-primary transition-all duration-300"
         />
         <AudioLines className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground cursor-pointer hover:text-primary transition-colors duration-300" />
       </div>
@@ -84,7 +84,7 @@ const SearchBar = ({ onSearch, onSelect, selectedSong }) => {
               >
                 <img src={result.albumArt} alt={result.fullTitle} className="w-12 h-12 rounded-md mr-4 object-cover" />
                 <div>
-                  <h3 className="font-semibold text-primary-foreground">{result.title}</h3>
+                  <h3 className="font-semibold text-foreground">{result.title}</h3>
                   <p className="text-sm text-muted-foreground">{result.artist}</p>
                 </div>
               </motion.div>

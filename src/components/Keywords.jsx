@@ -25,7 +25,7 @@ const Keywords = ({ keywords }) => {
         <Badge 
           key={index} 
           variant="secondary" 
-          className="text-sm font-medium py-1 px-3 bg-primary/20 text-primary-foreground"
+          className="text-sm font-medium py-1 px-3 bg-primary/20 text-foreground"
         >
           {`${item.text} (${item.value})`}
         </Badge>

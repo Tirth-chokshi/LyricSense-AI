@@ -37,8 +37,8 @@ const Analysis = ({ analysis }) => {
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
-              h1: ({ node, ...props }) => <h1 className="text-2xl font-bold text-primary mb-4" {...props} />,
-              h2: ({ node, ...props }) => <h2 className="text-xl font-semibold text-primary-foreground mb-3" {...props} />,
+              h1: ({ node, ...props }) => <h1 className="text-2xl font-bold mb-4" {...props} />,
+              h2: ({ node, ...props }) => <h2 className="text-xl font-semibold text-foreground mb-3" {...props} />,
               p: ({ node, ...props }) => <p className="mb-4 text-muted-foreground" {...props} />,
               ul: ({ node, ...props }) => <ul className="list-disc pl-5 mb-4" {...props} />,
               ol: ({ node, ...props }) => <ol className="list-decimal pl-5 mb-4" {...props} />,
