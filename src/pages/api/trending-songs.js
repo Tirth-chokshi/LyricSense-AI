@@ -30,7 +30,7 @@ export default async function handler(req, res) {
             title: result.title,
             artist: result.artist,
             albumArt: result.albumArt,
-            plays: generateRandomPlays() // You might want to get real play counts if available
+            // plays: generateRandomPlays() // You might want to get real play counts if available
           };
         }
         return null;

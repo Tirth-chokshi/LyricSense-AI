@@ -36,7 +36,7 @@ const TrendingSongs = ({ songs, onSelect }) => {
               <CardContent className="p-4">
                 <h3 className="font-semibold text-sm mb-1 truncate">{song.title}</h3>
                 <p className="text-xs text-muted-foreground mb-2 truncate">{song.artist}</p>
-                <Badge variant="secondary" className="text-xs">{song.plays} plays</Badge>
+                {/* <Badge variant="secondary" className="text-xs">{song.plays} plays</Badge> */}
               </CardContent>
             </Card>
           </motion.div>
