@@ -84,13 +84,11 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-secondary to-background">
       <div className="container mx-auto px-4 py-8">
-        <header className="relative flex justify-center items-center mb-12">
+        <header className="flex flex-col sm:flex-row justify-between items-center mb-12 space-y-4 sm:space-y-0">
           <h1 className="text-center text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-foreground">
             LyricSense AI
           </h1>
-          <div className="absolute right-0 top-1/2 transform -translate-y-1/2">
-            <BTheme />
-          </div>
+          <BTheme />
         </header>
           <SearchBar onSearch={handleSearch} onSelect={handleSongSelection} selectedSong={selectedSong} />
 
