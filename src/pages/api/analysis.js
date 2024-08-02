@@ -1,6 +1,5 @@
 import { analysisgetGroqChatCompletion } from "@/lib/action";
 import getLyrics from "@/misc/getLyrics";
-import generateWordCloudData from '@/lib/generateWordCloudData';
 import analyzeSentiment from '@/lib/analyzeSentiment';
 import analyzeThemes from '@/lib/analyzeThemes';
 import analyzeRhymes from '@/lib/analyzeRhymes';
@@ -21,20 +20,7 @@ export default async function handler(req, res) {
         return res.status(404).json({ error: 'Lyrics not found' });
       }
 
-      let wordCloudData, sentimentData, themeData, rhymeData, lyricsData, overallAnalysis;
-      try {
-        wordCloudData = generateWordCloudData(lyrics);
-      } catch (error) {
-        console.error('Error generating word cloud data:', error);
-        wordCloudData = [];
-      }
-      // Analyze lyrics in detail
-      try {
-        lyricsData = await analyzeLyricsInDetail(lyrics);
-      } catch (error) {
-        console.error('Error analyzing lyrics in detail:', error);
-        lyricsData = [{ line: "Error analyzing lyrics", words: [] }];
-      }
+      let  sentimentData, themeData, rhymeData, lyricsData, overallAnalysis;
 
       // Analyze sentiment
       try {
@@ -75,7 +61,6 @@ export default async function handler(req, res) {
 
       res.status(200).json({
         overallAnalysis: overallAnalysis.choices[0].message.content,
-        wordCloudData,
         sentimentData,
         themeData,
         rhymeData,

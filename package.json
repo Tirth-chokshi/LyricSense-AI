@@ -17,6 +17,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
+    "@tabler/icons-react": "^3.11.0",
     "@tremor/react": "^3.17.4",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
@@ -25,7 +26,7 @@
     "clsx": "^2.1.1",
     "color-thief-node": "^1.0.4",
     "dotenv": "^16.4.5",
-    "framer-motion": "^11.3.8",
+    "framer-motion": "^11.3.21",
     "franc": "^6.2.0",
     "groq-sdk": "^0.5.0",
     "jsonwebtoken": "^9.0.2",
@@ -39,12 +40,12 @@
     "react-dom": "^18",
     "react-icons": "^5.2.1",
     "react-markdown": "^9.0.1",
-    "react-wordcloud": "^1.2.7",
     "recharts": "^2.12.7",
     "remark-gfm": "^4.0.0",
     "stopwords-en": "^0.3.0",
-    "tailwind-merge": "^2.3.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwind-merge": "^2.4.0",
+    "tailwindcss-animate": "^1.0.7",
+    "wordcloud": "^1.2.2"
   },
   "devDependencies": {
     "eslint": "^8",

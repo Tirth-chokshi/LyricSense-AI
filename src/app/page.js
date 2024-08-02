@@ -10,7 +10,10 @@ import { Lightbulb, Music, Disc3, TrendingUp, BookOpen, MessageCircle } from 'lu
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { motion, AnimatePresence } from 'framer-motion'
 import TrendingSongs from '@/components/TrendingSongs'
+import { themes } from '@/lib/theme'
 export default function Home() {
+  const [currentTheme, setCurrentTheme] = useState(getRandomTheme())
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const [songTitle, setSongTitle] = useState('')
   const [artistName, setArtistName] = useState('')
   const [selectedSong, setSelectedSong] = useState(null)
@@ -21,10 +24,31 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [trendingSongs, setTrendingSongs] = useState([])
-
+  function getRandomTheme() {
+    const themeNames = Object.keys(themes);
+    return themeNames[Math.floor(Math.random() * themeNames.length)];
+  }
   useEffect(() => {
     fetchTrendingSongs()
   }, [])
+
+  useEffect(() => {
+    // Check system preference for dark mode
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    setIsDarkMode(darkModeMediaQuery.matches);
+
+    // Set initial theme
+    updateCSSVariables(currentTheme, darkModeMediaQuery.matches);
+
+    // Listen for changes in system preference
+    const listener = (e) => {
+      setIsDarkMode(e.matches);
+      updateCSSVariables(currentTheme, e.matches);
+    };
+    darkModeMediaQuery.addListener(listener);
+
+    return () => darkModeMediaQuery.removeListener(listener);
+  }, [])  
   const handleSearch = async (query) => {
     try {
       const response = await axios.post('/api/search', { songTitle: query });
@@ -53,6 +77,24 @@ export default function Home() {
     setSelectedSong(result);
     await handleSubmit(null, result.title, result.artist);
   };
+  const updateCSSVariables = (themeName, isDark) => {
+    const root = document.documentElement;
+    const theme = themes[themeName][isDark ? 'dark' : 'light'];
+    Object.entries(theme).forEach(([key, value]) => {
+      root.style.setProperty(`--${key}`, value);
+    });
+  };
+
+  const changeTheme = (newTheme, isDark) => {
+    setCurrentTheme(newTheme);
+    setIsDarkMode(isDark);
+    updateCSSVariables(newTheme, isDark);
+  };
+
+  const shuffleTheme = () => {
+    const newTheme = getRandomTheme();
+    changeTheme(newTheme, isDarkMode);
+  };
 
   const handleSubmit = async (e, title = songTitle, artist = artistName) => {
     if (e) e.preventDefault();
@@ -70,6 +112,10 @@ export default function Home() {
       setAnalysisResponse(analysisRes.data.overallAnalysis)
       setYoutubeUrl(keywordsRes.data.youtubeUrl)
       setMoodsAndThemes(keywordsRes.data.moodsAndThemes)
+      const themeNames = Object.keys(themes);
+      const randomTheme = themeNames[Math.floor(Math.random() * themeNames.length)];
+      changeTheme(randomTheme);
+      shuffleTheme()
 
       setSubmitted(true);
     } catch (error) {
@@ -88,7 +134,7 @@ export default function Home() {
           <h1 className="text-center text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-foreground">
             LyricSense AI
           </h1>
-          <BTheme />
+          <BTheme onThemeChange={(isDark) => updateCSSVariables(currentTheme, isDark)} />
         </header>
           <SearchBar onSearch={handleSearch} onSelect={handleSongSelection} selectedSong={selectedSong} />
 
