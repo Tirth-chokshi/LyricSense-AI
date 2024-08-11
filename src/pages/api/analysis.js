@@ -1,9 +1,7 @@
 import { analysisgetGroqChatCompletion } from "@/lib/action";
 import getLyrics from "@/misc/getLyrics";
-import analyzeSentiment from '@/lib/analyzeSentiment';
 import analyzeThemes from '@/lib/analyzeThemes';
 import analyzeRhymes from '@/lib/analyzeRhymes';
-import analyzeLyricsInDetail from '@/lib/analyzeLyricsInDetail';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -20,16 +18,7 @@ export default async function handler(req, res) {
         return res.status(404).json({ error: 'Lyrics not found' });
       }
 
-      let  sentimentData, themeData, rhymeData, lyricsData, overallAnalysis;
-
-      // Analyze sentiment
-      try {
-        sentimentData = analyzeSentiment(lyrics);
-      } catch (error) {
-        console.error('Error analyzing sentiment:', error);
-        sentimentData = { score: 0, comparative: 0 };
-      }
-
+      let  themeData, rhymeData, lyricsData, overallAnalysis;
       // Analyze themes
       try {
         themeData = await analyzeThemes(lyrics);
@@ -61,7 +50,6 @@ export default async function handler(req, res) {
 
       res.status(200).json({
         overallAnalysis: overallAnalysis.choices[0].message.content,
-        sentimentData,
         themeData,
         rhymeData,
         lyricsData
