@@ -3,7 +3,6 @@ import searchSong from "@/misc/searchSong";
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
-      // List of trending songs with both title and artist
       const trendingSongs = [
         { title: "Bye Bye Bye", artist: "NSYNC" },
         { title: "Birds of a feather", artist: "Billie Eilish" },
@@ -12,7 +11,6 @@ export default async function handler(req, res) {
         { title: "Big Dawgs", artist: "Hanumankind" }
       ];
 
-      // Fetch details for each trending song
       const trendingSongsPromises = trendingSongs.map(async ({ title, artist }) => {
         const options = {
           apiKey: process.env.LYRIC_API,
@@ -24,13 +22,12 @@ export default async function handler(req, res) {
         const searchResults = await searchSong(options);
         
         if (searchResults && searchResults.length > 0) {
-          const result = searchResults[0]; // Take the first result
+          const result = searchResults[0]
           return {
             id: result.id,
             title: result.title,
             artist: result.artist,
             albumArt: result.albumArt,
-            // plays: generateRandomPlays() // You might want to get real play counts if available
           };
         }
         return null;
@@ -46,10 +43,4 @@ export default async function handler(req, res) {
   } else {
     res.status(405).json({ error: 'Method not allowed' });
   }
-}
-
-// Helper function to generate random play counts (for demonstration purposes)
-function generateRandomPlays() {
-  const plays = Math.floor(Math.random() * 3000) + 1000; // Random number between 1000 and 4000
-  return `${(plays / 1000).toFixed(1)}B`;
 }
