@@ -52,33 +52,33 @@ const ChatInterface = ({ songTitle, artistName }) => {
   };
 
   return (
-    <div>
-      <ScrollArea>
+    <div className="chat-container">
+      <ScrollArea className="chat-scroll-area">
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`mb-4 p-3 rounded-lg ${
-              message.sender === 'user' ? 'bg-primary text-primary-foreground ml-auto' : 'bg-secondary text-secondary-foreground'
-            } max-w-[80%] ${message.sender === 'user' ? 'text-right' : 'text-left'}`}
+            className={`chat-message ${
+              message.sender === 'user' ? 'user-message' : 'ai-message'
+            }`}
           >
             {message.text}
           </div>
         ))}
         {isLoading && (
-          <div className="text-center text-muted-foreground">
+          <div className="loading-message">
             Thinking...
           </div>
         )}
       </ScrollArea>
-      <form onSubmit={handleSubmit} className="flex gap-2">
+      <form onSubmit={handleSubmit} className="input-form">
         <Input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="flex-1"
+          className="message-input"
           placeholder="Type your message..."
           disabled={isLoading}
         />
-        <Button type="submit" disabled={isLoading || !input.trim()}>
+        <Button type="submit" disabled={isLoading || !input.trim()} className="send-button">
           Send
         </Button>
       </form>
