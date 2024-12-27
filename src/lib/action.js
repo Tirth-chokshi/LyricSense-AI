@@ -14,7 +14,7 @@ export async function keywordsgetGroqChatCompletion(yourOriginalPrompt) {
       },
     ],
     // model: 'gemma-7b-it',
-    model: 'llama3-70b-8192',
+    model: 'llama-3.3-70b-versatile',
     // model: 'gemma2-9b-it',
   });
 }
@@ -27,7 +27,7 @@ export async function analysisgetGroqChatCompletion(yourOriginalPrompt) {
         content: prompt,
       },
     ],
-    model: 'gemma-7b-it',
+    model: 'llama-3.3-70b-versatile',
     // model: 'llama3-70b-8192',
     // model: 'gemma2-9b-it',
   });
