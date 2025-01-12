@@ -12,21 +12,29 @@ export default async function (url) {
 	try {
 		let { data } = await axios.get(url);
 		const $ = cheerio.load(data);
-		let lyrics = $('div[class="lyrics"]').text().trim();
-		if (!lyrics) {
-			lyrics = '';
-			$('div[class^="Lyrics__Container"]').each((i, elem) => {
-				if ($(elem).text().length !== 0) {
-					let snippet = $(elem)
-						.html()
-						.replace(/<br>/g, '\n')
-						.replace(/<(?!\s*br\s*\/?)[^>]+>/gi, '');
-					lyrics += $('<textarea/>').html(snippet).text().trim() + '\n\n';
-				}
-			});
-		}
-		if (!lyrics) return null;
-		return lyrics.trim();
+        
+        // Try multiple possible selectors
+        let lyrics = '';
+        
+        // Modern Genius structure
+        $('[data-lyrics-container="true"]').each((i, elem) => {
+            lyrics += $(elem).text().trim() + '\n\n';
+        });
+        
+        // Fallback to older structure if needed
+        if (!lyrics) {
+            $('div[class^="Lyrics__Container"]').each((i, elem) => {
+                lyrics += $(elem).text().trim() + '\n\n';
+            });
+        }
+        
+        // Last resort fallback
+        if (!lyrics) {
+            lyrics = $('div[class="lyrics"]').text().trim();
+        }
+        
+        if (!lyrics) return null;
+        return lyrics.trim();
 	} catch (e) {
 		throw e;
 	}
