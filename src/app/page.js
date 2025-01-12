@@ -215,7 +215,31 @@ export default function Home() {
                 <div className="loader"></div>
               </motion.div>
             ) : error ? (
-              <motion.div
+              // <motion.div
+              //   initial={{ opacity: 0, scale: 0.9 }}
+              //   animate={{ opacity: 1, scale: 1 }}
+              //   exit={{ opacity: 0, scale: 0.9 }}
+              // >
+              //   <Card className="bg-destructive/10 border-destructive/20">
+              //     <CardContent className="pt-6">
+              //       <div className="flex items-center space-x-2 text-destructive">
+              //         <AlertCircle className="h-5 w-5" />
+              //         <CardTitle className="text-lg font-medium">Oops! Something went wrong</CardTitle>
+              //       </div>
+              //       <p className="mt-2 text-sm text-muted-foreground">{error}</p>
+              //       <Button 
+              //         variant="outline" 
+              //         className="mt-4 bg-destructive/10 hover:bg-destructive/20 text-destructive"
+              //         onClick={() => window.location.reload()}
+              //       >
+              //         <RefreshCw className="mr-2 h-4 w-4" />
+              //         Refresh Page
+              //       </Button>
+              //     </CardContent>
+              //   </Card>
+              // </motion.div>
+
+              <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
@@ -227,14 +251,6 @@ export default function Home() {
                       <CardTitle className="text-lg font-medium">Oops! Something went wrong</CardTitle>
                     </div>
                     <p className="mt-2 text-sm text-muted-foreground">{error}</p>
-                    <Button 
-                      variant="outline" 
-                      className="mt-4 bg-destructive/10 hover:bg-destructive/20 text-destructive"
-                      onClick={() => window.location.reload()}
-                    >
-                      <RefreshCw className="mr-2 h-4 w-4" />
-                      Refresh Page
-                    </Button>
                   </CardContent>
                 </Card>
               </motion.div>
