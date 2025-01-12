@@ -169,7 +169,7 @@ export default function Home() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
             >
-              <TextGenerateEffect words="LyricSense AI" />
+              <TextGenerateEffect words="LyricSense" />
             </motion.h1>
             <SparklesCore
               id="tsparticles"
