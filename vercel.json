@@ -1,5 +1,13 @@
 {
-  "buildCommand": "npm run build",
-  "installCommand": "apt-get update && apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev && npm install --legacy-peer-deps",
-  "framework": "nextjs"
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "nodejs18"
+    }
+  },
+  "build": {
+    "env": {
+      "PKG_CONFIG_PATH": "/vercel/path0/lib/pkgconfig"
+    }
+  },
+  "installCommand": "yum install -y cairo cairo-devel cairomm-devel libjpeg-turbo-devel pango pango-devel pangomm pangomm-devel giflib-devel && npm install --legacy-peer-deps"
 }
