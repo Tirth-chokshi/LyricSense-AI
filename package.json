@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -36,10 +36,10 @@
     "lucide-react": "^0.412.0",
     "mongoose": "^8.4.4",
     "natural": "^7.1.0",
-    "next": "14.2.4",
+    "next": "15.1.4",
     "next-themes": "^0.3.0",
-    "react": "^18",
-    "react-dom": "^18",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "react-icons": "^5.2.1",
     "react-markdown": "^9.0.1",
     "recharts": "^2.12.7",
@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "eslint": "^8",
-    "eslint-config-next": "14.2.4",
+    "eslint-config-next": "15.1.4",
     "postcss": "^8",
     "tailwindcss": "^3.4.1"
   }
