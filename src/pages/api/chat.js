@@ -1,12 +1,13 @@
 import { keywordsgetGroqChatCompletion } from '@/lib/action';
 import getLyrics from '@/misc/getLyrics';
+import { LYRIC_API } from '@/lib/config';
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
         try {
             const { message, songTitle, artistName } = req.body;
             const options = {
-                apiKey: process.env.LYRIC_API,
+                apiKey: LYRIC_API,
                 title: songTitle,
                 artist: artistName+' ',
                 optimizeQuery: true
@@ -26,4 +27,3 @@ export default async function handler(req, res) {
         res.status(405).json({ error: 'Method not allowed' });
     }
 }
-    

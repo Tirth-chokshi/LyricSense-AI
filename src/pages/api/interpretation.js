@@ -1,17 +1,19 @@
 import { analysisgetGroqChatCompletion } from '@/lib/action';
 import getLyrics from '@/misc/getLyrics';
+import { LYRIC_API } from '@/lib/config';
+import { INTERPRETATION_PROMPT } from '@/lib/prompts';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const { songTitle, artistName } = req.body;
       const options = {
-        apiKey: process.env.LYRIC_API,
+        apiKey: LYRIC_API,
         title: songTitle,
         artist: artistName + ' ',
         optimizeQuery: true
       };
-      const interpretationPrompt = process.env.INTERPRETATION_PROMPT;
+      const interpretationPrompt = INTERPRETATION_PROMPT;
       const lyrics = await getLyrics(options);
       if (!lyrics) {
         return res.status(404).json({ error: 'Lyrics not found' });

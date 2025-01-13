@@ -2,13 +2,15 @@ import { analysisgetGroqChatCompletion } from "@/lib/action";
 import getLyrics from "@/misc/getLyrics";
 import analyzeThemes from '@/lib/analyzeThemes';
 import analyzeRhymes from '@/lib/analyzeRhymes';
+import { LYRIC_API } from '@/lib/config';
+import { ANALYSIS_PROMPT } from '@/lib/prompts';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const { songTitle, artistName } = req.body;
       const options = {
-        apiKey: process.env.LYRIC_API,
+        apiKey: LYRIC_API,
         title: songTitle,
         artist: artistName + ' ',
         optimizeQuery: true
@@ -37,7 +39,7 @@ export default async function handler(req, res) {
 
       // Perform overall analysis
       try {
-        const analysisPrompt = process.env.ANALYSIS_PROMPT;
+        const analysisPrompt = ANALYSIS_PROMPT;
         const overallAnalysisPrompt = `${analysisPrompt} 
         Song Title: "${songTitle}"
         Artist: "${artistName}"

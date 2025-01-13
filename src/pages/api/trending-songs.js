@@ -1,4 +1,5 @@
 import searchSong from "@/misc/searchSong";
+import { LYRIC_API } from '@/lib/config';
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
@@ -13,7 +14,7 @@ export default async function handler(req, res) {
 
       const trendingSongsPromises = trendingSongs.map(async ({ title, artist }) => {
         const options = {
-          apiKey: process.env.LYRIC_API,
+          apiKey: LYRIC_API,
           title: title,
           artist: artist,
           optimizeQuery: true

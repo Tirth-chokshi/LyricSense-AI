@@ -2,8 +2,9 @@ import searchSong from '@/misc/searchSong.js';
 import { checkOptions } from '@/misc/helpers/index.js';
 import extractLyrics from '@/misc/helpers/extractLyrics.js';
 import Groq from "groq-sdk";
+import { GROQ_API } from '@/lib/config';
 
-const groq = new Groq({ apiKey: process.env.GROQ_API });
+const groq = new Groq({ apiKey: GROQ_API });
 export async function keywordsgetGroqChatCompletion(yourOriginalPrompt) {
   const prompt = `Please provide the response in plain text without any Markdown formatting: ${yourOriginalPrompt}`;
   return await groq.chat.completions.create({
@@ -25,7 +26,7 @@ export async function analysisgetGroqChatCompletion(yourOriginalPrompt) {
         content: prompt,
       },
     ],
-    model: 'llama3-8b-8192',
+    model: 'mixtral-8x7b-32768',
   });
 }
 export default async function fetchLyrics(arg) {
