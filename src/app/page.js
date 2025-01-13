@@ -132,8 +132,7 @@ export default function Home() {
 
       setSubmitted(true);
     } catch (error) {
-      console.error('Error fetching data:', error);
-      setError('We\'re experiencing high traffic. Please try again.')
+      console.error('Error occured:', error);
     } finally {
       setLoading(false);
     }
