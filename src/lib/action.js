@@ -26,7 +26,7 @@ export async function analysisgetGroqChatCompletion(yourOriginalPrompt) {
         content: prompt,
       },
     ],
-    model: 'mixtral-8x7b-32768',
+    model: 'llama3.2-70b',
   });
 }
 export default async function fetchLyrics(arg) {
