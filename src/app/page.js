@@ -302,7 +302,7 @@ export default function Home() {
                 </motion.h2>
 
                 <div className="grid gap-8 md:grid-cols-2">
-                  <motion.div 
+                  {/* <motion.div 
                     className="youtube-container"
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -320,7 +320,7 @@ export default function Home() {
                         ></iframe>
                       </div>
                     )}
-                  </motion.div>
+                  </motion.div> */}
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}

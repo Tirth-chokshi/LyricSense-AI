@@ -21,9 +21,10 @@ export default async function handler(req, res) {
       }
       const prompt = `${keywordPrompt} ${lyrics}`;
       const chatCompletion = await keywordsgetGroqChatCompletion(prompt);
-      const youtubeUrl = await getYoutubeVideo(songTitle, artistName);
+      // const youtubeUrl = await getYoutubeVideo(songTitle, artistName);
       res.status(200).json({ 
-        response: chatCompletion.choices[0].message.content,youtubeUrl
+        response: chatCompletion.choices[0].message.content,
+        // youtubeUrl
       });
     } catch (error) {
       console.error('Error fetching data:', error);
