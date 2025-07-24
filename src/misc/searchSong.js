@@ -9,16 +9,24 @@ const searchUrl = 'https://api.genius.com/search?q=';
 export default async function (options) {
     try {
         checkOptions(options);
-        let { apiKey = process.env.LYRIC_API, title, artist, optimizeQuery = false, authHeader = false } = options;
+        let { apiKey = process.env.LYRIC_API, title, artist, optimizeQuery = false, authHeader = true } = options;
         const song = optimizeQuery ? getTitle(title, artist) : `${title} ${artist}`;
         const reqUrl = `${searchUrl}${encodeURIComponent(song)}`;
+        
+        // Use Bearer token authentication (correct method for access tokens)
         const headers = {
-            Authorization: 'Bearer ' + apiKey
+            Authorization: 'Bearer ' + apiKey,
+            'User-Agent': 'LyricSense/1.0'
         };
-        let { data } = await axios.get(
-            authHeader ? reqUrl : `${reqUrl}&access_token=${apiKey}`,
-            authHeader && { headers }
-        );
+        
+        console.log('[SearchSong] Making request to:', reqUrl);
+        console.log('[SearchSong] Using Bearer token authentication');
+        
+        let { data } = await axios.get(reqUrl, { 
+            headers,
+            timeout: 15000 // 15 second timeout
+        });
+        
         if (data.response.hits.length === 0) return null;
         const results = data.response.hits.map((val) => {
             const { full_title, song_art_image_url, id, url, primary_artist } = val.result;
