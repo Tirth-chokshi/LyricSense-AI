@@ -99,7 +99,7 @@ const ChatInterface = ({ songTitle, artistName }) => {
                   AI Song Assistant
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Ask questions about "{songTitle}" by {artistName}
+                  Ask questions about &ldquo;{songTitle}&rdquo; by {artistName}
                 </p>
               </div>
               <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-green-500/10 text-green-600 text-xs">

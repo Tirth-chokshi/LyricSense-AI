@@ -6,8 +6,26 @@ import { Badge } from '@/components/ui/badge';
 import { Tag } from 'lucide-react';
 
 const Keywords = ({ keywords }) => {
+  // Handle empty or undefined keywords
+  if (!keywords || typeof keywords !== 'string') {
+    return (
+      <Card className="bg-gradient-to-br from-primary/10 to-secondary/10">
+        <CardHeader>
+          <h3 className="text-xl font-semibold text-primary">
+            <Tag className="mr-2" size={18} /> Key Themes & Motifs
+          </h3>
+        </CardHeader>
+        <CardContent>
+          <p className="text-muted-foreground">No keywords available</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   // Split the keywords string into moods and themes
-  const [moodsString, themesString] = keywords.split('\n');
+  const lines = keywords.split('\n').filter(line => line.trim());
+  const moodsString = lines.find(line => line.startsWith('Moods:')) || '';
+  const themesString = lines.find(line => line.startsWith('Themes:')) || '';
 
   // Parse moods and themes
   const parseMoodsThemes = (str) => {

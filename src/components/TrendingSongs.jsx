@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -38,7 +39,7 @@ const TrendingSongs = ({ songs, onSelect }) => {
           Trending Songs
         </motion.h2>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Discover what's popular and start your lyrical journey with these trending tracks
+          Discover what&apos;s popular and start your lyrical journey with these trending tracks
         </p>
       </div>
 
@@ -66,10 +67,11 @@ const TrendingSongs = ({ songs, onSelect }) => {
                 onClick={() => onSelect(song)}
               >
                 <div className="relative pb-[100%] overflow-hidden">
-                  <img 
+                  <Image 
                     src={song.albumArt} 
                     alt={`${song.title} by ${song.artist}`}
-                    className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   {/* Overlay with play button */}
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">

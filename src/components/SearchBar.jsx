@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { debounce } from 'lodash';
 import { Input } from "@/components/ui/input";
@@ -10,13 +11,18 @@ const SearchBar = ({ onSearch, onSelect, selectedSong }) => {
   const [isSearching, setIsSearching] = useState(false);
 
   const debouncedSearch = useCallback(
-    debounce((query) => {
+    debounce(async (query) => {
       if (query.length >= 2) {
         setIsSearching(true);
-        onSearch(query).then((results) => {
+        try {
+          const results = await onSearch(query);
           setSearchResults(results);
+        } catch (error) {
+          console.error('Search error:', error);
+          setSearchResults([]);
+        } finally {
           setIsSearching(false);
-        });
+        }
       } else {
         setSearchResults([]);
       }
@@ -82,7 +88,9 @@ const SearchBar = ({ onSearch, onSelect, selectedSong }) => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <img src={result.albumArt} alt={result.fullTitle} className="w-12 h-12 rounded-md mr-4 object-cover" />
+                <div className="relative w-12 h-12 rounded-md mr-4 overflow-hidden">
+                  <Image src={result.albumArt} alt={result.fullTitle} fill className="object-cover" />
+                </div>
                 <div>
                   <h3 className="font-semibold text-foreground">{result.title}</h3>
                   <p className="text-sm text-muted-foreground">{result.artist}</p>

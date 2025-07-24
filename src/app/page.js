@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import Image from 'next/image'
 import Keywords from "@/components/Keywords"
 import Analysis from "@/components/Analysis"
 import ChatInterface from '@/components/ChatInterface'
@@ -57,7 +58,7 @@ export default function Home() {
     darkModeMediaQuery.addListener(listener);
 
     return () => darkModeMediaQuery.removeListener(listener);
-  }, [])  
+  }, [currentTheme])  
 
   const handleSearch = async (query) => {
     try {
@@ -280,10 +281,11 @@ export default function Home() {
                               <div className="relative group">
                                 <div className="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-xl blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
                                 <div className="relative w-32 h-32 lg:w-40 lg:h-40 rounded-xl overflow-hidden shadow-2xl">
-                                  <img 
+                                  <Image 
                                     src={selectedSong.albumArt} 
                                     alt={selectedSong.title}
-                                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                    fill
+                                    className="object-cover transition-transform duration-300 group-hover:scale-105"
                                   />
                                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
                                 </div>
