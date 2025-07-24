@@ -300,18 +300,20 @@ export default function Home() {
       try {
         const [keywordsRes, analysisRes] = await Promise.all(apiCalls);
 
-        // Validate responses
+        // Enhanced response validation with detailed error reporting
         if (keywordsRes?.data?.response) {
           setKeywordsResponse(keywordsRes.data.response);
         } else {
-          addWarning('Keywords data is incomplete or missing', 'keywords-data');
+          const errorDetail = keywordsRes?.data?.debug || keywordsRes?.data;
+          addWarning(`Keywords data is incomplete or missing. Details: ${JSON.stringify(errorDetail)}`, 'keywords-data');
           setKeywordsResponse('No keywords available');
         }
 
         if (analysisRes?.data?.overallAnalysis) {
           setAnalysisResponse(analysisRes.data.overallAnalysis);
         } else {
-          addWarning('Analysis data is incomplete or missing', 'analysis-data');
+          const errorDetail = analysisRes?.data?.debug || analysisRes?.data;
+          addWarning(`Analysis data is incomplete or missing. Details: ${JSON.stringify(errorDetail)}`, 'analysis-data');
           setAnalysisResponse('No analysis available');
         }
 
@@ -329,6 +331,14 @@ export default function Home() {
           addWarning('Moods and themes data not available', 'moods-data');
         }
 
+        // Handle API warnings
+        if (keywordsRes?.data?.warnings) {
+          keywordsRes.data.warnings.forEach(warning => addWarning(warning, 'keywords-api'));
+        }
+        if (analysisRes?.data?.warnings) {
+          analysisRes.data.warnings.forEach(warning => addWarning(warning, 'analysis-api'));
+        }
+
         // Handle theme change
         try {
           const themeNames = Object.keys(themes);
@@ -344,20 +354,54 @@ export default function Home() {
         setSubmitted(true);
 
       } catch (apiError) {
-        // Handle partial failures
+        // Enhanced error handling with production debugging
+        console.error('API Error Details:', {
+          error: apiError,
+          response: apiError.response?.data,
+          status: apiError.response?.status,
+          config: apiError.config
+        });
+
         if (apiError.response) {
           const status = apiError.response.status;
-          const message = apiError.response.data?.message || 'API request failed';
+          const errorData = apiError.response.data;
+          const message = errorData?.message || 'API request failed';
           
+          // Add debug information for production troubleshooting
+          const debugInfo = errorData?.debug || {};
+          const errorContext = {
+            status,
+            message,
+            timestamp: new Date().toISOString(),
+            environment: debugInfo.environment || 'unknown',
+            hasLyricAPI: debugInfo.hasLyricAPI,
+            hasPrompts: debugInfo.hasKeywordPrompt || debugInfo.hasAnalysisPrompt,
+            details: errorData?.details || errorData?.error
+          };
+
           if (status >= 500) {
-            addError(`Server error (${status}): ${message}`, 'server');
+            addError(`Server error (${status}): ${message}. Debug: ${JSON.stringify(errorContext)}`, 'server');
           } else if (status >= 400) {
-            addError(`Client error (${status}): ${message}`, 'client');
+            addError(`Client error (${status}): ${message}. Debug: ${JSON.stringify(errorContext)}`, 'client');
           } else {
-            addError(`API error (${status}): ${message}`, 'api');
+            addError(`API error (${status}): ${message}. Debug: ${JSON.stringify(errorContext)}`, 'api');
           }
+
+          // Specific error handling for common production issues
+          if (status === 500 && message.includes('configuration')) {
+            addError('This appears to be an environment variable configuration issue. Please check that all required API keys are set in production.', 'config');
+          }
+          
+          if (status === 500 && debugInfo.error === 'lyrics_fetch_failed') {
+            addError('Lyrics service is unavailable. This might be a network connectivity issue in production.', 'lyrics-service');
+          }
+
+          if (status === 500 && debugInfo.error === 'ai_processing_failed') {
+            addError('AI service (Groq) is unavailable. Please check the GROQ_API key configuration.', 'ai-service');
+          }
+
         } else if (apiError.request) {
-          addError('Network error: Unable to reach the server', 'network');
+          addError('Network error: Unable to reach the server. This might be a DNS or firewall issue in production.', 'network');
         } else {
           addError(`Request setup error: ${apiError.message}`, 'request');
         }
