@@ -59,7 +59,7 @@ export default async function handler(req, res) {
 
     console.log('[Keywords API] Processing request for:', { songTitle, artistName });
 
-    // Get lyrics with error handling
+    // Get lyrics with enhanced error handling
     const options = {
       apiKey: LYRIC_API,
       title: songTitle,
@@ -69,28 +69,83 @@ export default async function handler(req, res) {
 
     let lyrics;
     try {
-      console.log('[Keywords API] Fetching lyrics...');
+      console.log('[Keywords API] Fetching lyrics with options:', {
+        title: options.title,
+        artist: options.artist,
+        optimizeQuery: options.optimizeQuery,
+        apiKeyLength: options.apiKey?.length
+      });
+      
       lyrics = await getLyrics(options);
-      console.log('[Keywords API] Lyrics fetched successfully:', !!lyrics);
+      console.log('[Keywords API] Lyrics fetch result:', {
+        found: !!lyrics,
+        length: lyrics?.length || 0,
+        preview: lyrics ? lyrics.substring(0, 100) + '...' : null
+      });
+      
     } catch (lyricsError) {
-      console.error('[Keywords API] Lyrics fetch error:', lyricsError);
+      console.error('[Keywords API] Lyrics fetch error details:', {
+        error: lyricsError.message,
+        type: lyricsError.constructor.name,
+        songTitle,
+        artistName,
+        environment: process.env.NODE_ENV
+      });
+
+      // Enhanced error analysis for production debugging
+      let errorAnalysis = 'Unknown lyrics fetch error';
+      let suggestions = [];
+
+      if (lyricsError.message?.includes('timeout')) {
+        errorAnalysis = 'Network timeout while fetching lyrics';
+        suggestions.push('Check if Genius API is accessible from production environment');
+        suggestions.push('Consider increasing timeout values');
+      } else if (lyricsError.message?.includes('ENOTFOUND')) {
+        errorAnalysis = 'DNS resolution failed for lyrics service';
+        suggestions.push('Verify production environment can resolve api.genius.com');
+        suggestions.push('Check firewall/proxy settings');
+      } else if (lyricsError.message?.includes('403')) {
+        errorAnalysis = 'Lyrics API key forbidden';
+        suggestions.push('Verify LYRIC_API key is valid for production use');
+        suggestions.push('Check if API key has sufficient quota');
+      } else if (lyricsError.message?.includes('429')) {
+        errorAnalysis = 'Rate limit exceeded on lyrics API';
+        suggestions.push('Implement request throttling');
+        suggestions.push('Consider upgrading API plan');
+      } else if (lyricsError.message?.includes('ECONNREFUSED')) {
+        errorAnalysis = 'Connection refused by lyrics service';
+        suggestions.push('Check if production IP is whitelisted');
+        suggestions.push('Verify lyrics service is not blocking requests');
+      }
+
       return res.status(404).json({ 
         error: 'Lyrics not found',
         message: `Could not find lyrics for "${songTitle}" by ${artistName}`,
         debug: { 
           ...debugInfo, 
           error: 'lyrics_fetch_failed',
-          details: lyricsError.message || lyricsError.toString()
+          details: lyricsError.message || lyricsError.toString(),
+          errorAnalysis,
+          suggestions,
+          productionNote: 'This works locally but fails in production - likely a network/environment issue'
         }
       });
     }
 
     if (!lyrics) {
-      console.log('[Keywords API] No lyrics returned');
+      console.log('[Keywords API] No lyrics returned from service');
       return res.status(404).json({ 
         error: 'Lyrics not found',
         message: `No lyrics available for "${songTitle}" by ${artistName}`,
-        debug: { ...debugInfo, error: 'no_lyrics_returned' }
+        debug: { 
+          ...debugInfo, 
+          error: 'no_lyrics_returned',
+          suggestions: [
+            'Try searching for exact song title and artist spelling',
+            'Check if song exists in Genius database',
+            'Verify song title matches what\'s in the lyrics database'
+          ]
+        }
       });
     }
 
