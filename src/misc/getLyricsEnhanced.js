@@ -1,4 +1,3 @@
-// Enhanced lyrics service with fallback and retry logic
 import searchSong from './searchSong.js';
 import { checkOptions } from './helpers/index.js';
 import extractLyrics from './helpers/extractLyrics.js';
