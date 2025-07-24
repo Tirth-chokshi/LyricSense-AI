@@ -133,17 +133,47 @@ export default async function handler(req, res) {
     }
 
     if (!lyrics) {
-      console.log('[Keywords API] No lyrics returned from service');
+      console.log('[Keywords API] No lyrics returned from service - trying fallback');
+      
+      // Fallback: Provide analysis based on song title and artist
+      const fallbackPrompt = `${KEYWORD_PROMPT} 
+      
+      Note: Lyrics could not be retrieved for this song, but please provide a general analysis based on the song title and artist information:
+      
+      Song: "${songTitle}" by ${artistName}
+      
+      Please provide keywords, themes, and mood analysis based on the song title, artist's typical style, and any general knowledge about this song. Mention that this analysis is based on the song title and artist rather than full lyrics.`;
+
+      try {
+        console.log('[Keywords API] Attempting fallback analysis...');
+        const fallbackCompletion = await keywordsgetGroqChatCompletion(fallbackPrompt);
+        
+        if (fallbackCompletion?.choices?.[0]?.message?.content) {
+          return res.status(200).json({ 
+            response: `[Limited Analysis - Lyrics unavailable]\n\n${fallbackCompletion.choices[0].message.content}`,
+            warning: 'This analysis is based on song title and artist information as lyrics could not be retrieved',
+            debug: process.env.NODE_ENV === 'development' ? {
+              ...debugInfo,
+              fallbackUsed: true,
+              lyricsAvailable: false
+            } : undefined
+          });
+        }
+      } catch (fallbackError) {
+        console.error('[Keywords API] Fallback analysis also failed:', fallbackError);
+      }
+      
       return res.status(404).json({ 
         error: 'Lyrics not found',
-        message: `No lyrics available for "${songTitle}" by ${artistName}`,
+        message: `No lyrics available for "${songTitle}" by ${artistName} and fallback analysis failed`,
         debug: { 
           ...debugInfo, 
           error: 'no_lyrics_returned',
           suggestions: [
             'Try searching for exact song title and artist spelling',
             'Check if song exists in Genius database',
-            'Verify song title matches what\'s in the lyrics database'
+            'Verify song title matches what\'s in the lyrics database',
+            'The song may be too new or not available in the lyrics database'
           ]
         }
       });

@@ -87,11 +87,70 @@ export default async function handler(req, res) {
     }
 
     if (!lyrics) {
-      console.log('[Analysis API] No lyrics returned');
+      console.log('[Analysis API] No lyrics returned - trying fallback analysis');
+      
+      // Fallback: Provide analysis based on song title and artist
+      const fallbackPrompt = `${ANALYSIS_PROMPT}
+      
+      Note: Lyrics could not be retrieved for this song, but please provide a comprehensive analysis based on the song title and artist information:
+      
+      Song Title: "${songTitle}"
+      Artist: "${artistName}"
+      
+      Please provide:
+      1. Analysis based on the song title and what it might suggest
+      2. Context about the artist's typical musical style and themes
+      3. Any known information about this specific song
+      4. General themes that might be present based on the title
+      
+      Please mention that this analysis is based on available information rather than full lyrics analysis.`;
+
+      try {
+        console.log('[Analysis API] Attempting fallback analysis...');
+        const fallbackCompletion = await analysisgetGroqChatCompletion(fallbackPrompt);
+        
+        if (fallbackCompletion?.choices?.[0]?.message?.content) {
+          const fallbackAnalysis = `[Limited Analysis - Lyrics unavailable]\n\n${fallbackCompletion.choices[0].message.content}`;
+          
+          // Return partial analysis
+          const response = {
+            themeData: [
+              { 
+                name: "Limited Analysis", 
+                description: "Analysis based on song title and artist information only" 
+              }
+            ],
+            rhymeData: {},
+            lyricsData: null,
+            overallAnalysis: fallbackAnalysis,
+            warnings: ['Lyrics could not be retrieved - analysis is based on song title and artist information'],
+            debug: process.env.NODE_ENV === 'development' ? {
+              ...debugInfo,
+              fallbackUsed: true,
+              lyricsAvailable: false
+            } : undefined
+          };
+
+          console.log('[Analysis API] Fallback analysis completed successfully');
+          return res.status(200).json(response);
+        }
+      } catch (fallbackError) {
+        console.error('[Analysis API] Fallback analysis also failed:', fallbackError);
+      }
+
       return res.status(404).json({ 
         error: 'Lyrics not found',
-        message: `No lyrics available for "${songTitle}" by ${artistName}`,
-        debug: { ...debugInfo, error: 'no_lyrics_returned' }
+        message: `No lyrics available for "${songTitle}" by ${artistName} and fallback analysis failed`,
+        debug: { 
+          ...debugInfo, 
+          error: 'no_lyrics_returned',
+          suggestions: [
+            'Try searching for exact song title and artist spelling',
+            'Check if song exists in Genius database', 
+            'Verify song title matches what\'s in the lyrics database',
+            'The song may be too new or not available in the lyrics database'
+          ]
+        }
       });
     }
 
