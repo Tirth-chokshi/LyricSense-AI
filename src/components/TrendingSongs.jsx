@@ -1,11 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Disc3, TrendingUp, Play } from 'lucide-react';
+import { Disc3, TrendingUp, Play, AlertTriangle } from 'lucide-react';
 
-const TrendingSongs = ({ songs, onSelect }) => {
+const TrendingSongs = ({ songs, onSelect, errors = [], warnings = [] }) => {
+  const [imageErrors, setImageErrors] = useState({});
+
+  const handleImageError = (songId) => {
+    setImageErrors(prev => ({ ...prev, [songId]: true }));
+  };
+
+  const handleSongSelect = (song) => {
+    try {
+      if (!song || !song.title || !song.artist) {
+        console.error('Invalid song data:', song);
+        return;
+      }
+      onSelect(song);
+    } catch (error) {
+      console.error('Error selecting song:', error);
+    }
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -20,6 +38,60 @@ const TrendingSongs = ({ songs, onSelect }) => {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
   };
+
+  // Show error state if no songs and there are errors
+  if (songs.length === 0 && errors.length > 0) {
+    return (
+      <motion.div 
+        className="trending-songs mb-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="text-center space-y-4 mb-8">
+          <motion.h2 
+            className="text-3xl lg:text-4xl font-bold text-muted-foreground"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <AlertTriangle className="inline mr-3 text-destructive" size={32} />
+            Trending Songs Unavailable
+          </motion.h2>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            We&apos;re having trouble loading trending songs right now. You can still search for any song above.
+          </p>
+        </div>
+      </motion.div>
+    );
+  }
+
+  // Show empty state if no songs but no errors
+  if (songs.length === 0) {
+    return (
+      <motion.div 
+        className="trending-songs mb-12"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="text-center space-y-4 mb-8">
+          <motion.h2 
+            className="text-3xl lg:text-4xl font-bold text-muted-foreground"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <TrendingUp className="inline mr-3" size={32} />
+            No Trending Songs
+          </motion.h2>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            Trending songs are being updated. Please try searching for a song instead.
+          </p>
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div 
@@ -64,15 +136,22 @@ const TrendingSongs = ({ songs, onSelect }) => {
               <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition duration-1000"></div>
               <Card 
                 className="relative overflow-hidden transition-all duration-300 hover:shadow-2xl cursor-pointer h-full bg-gradient-to-br from-card/90 to-card border-border/50 group-hover:border-primary/30"
-                onClick={() => onSelect(song)}
+                onClick={() => handleSongSelect(song)}
               >
                 <div className="relative pb-[100%] overflow-hidden">
-                  <Image 
-                    src={song.albumArt} 
-                    alt={`${song.title} by ${song.artist}`}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
+                  {!imageErrors[song.id] ? (
+                    <Image 
+                      src={song.albumArt} 
+                      alt={`${song.title} by ${song.artist}`}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      onError={() => handleImageError(song.id)}
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-muted flex items-center justify-center">
+                      <Disc3 className="w-12 h-12 text-muted-foreground" />
+                    </div>
+                  )}
                   {/* Overlay with play button */}
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center">
                     <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transform scale-50 group-hover:scale-100 transition-all duration-300">

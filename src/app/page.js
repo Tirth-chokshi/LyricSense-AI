@@ -7,6 +7,7 @@ import Analysis from "@/components/Analysis"
 import ChatInterface from '@/components/ChatInterface'
 import BTheme from '@/components/BTheme'
 import SearchBar from '@/components/SearchBar'
+import ErrorDisplay from '@/components/ErrorDisplay'
 import { Button } from "@/components/ui/button"
 import { motion, AnimatePresence } from 'framer-motion'
 import TrendingSongs from '@/components/TrendingSongs'
@@ -36,105 +37,339 @@ export default function Home() {
   const [submitted, setSubmitted] = useState(false)
   const [trendingSongs, setTrendingSongs] = useState([])
   const [error, setError] = useState(null)
+  const [errors, setErrors] = useState([])
+  const [warnings, setWarnings] = useState([])
+  const [apiErrors, setApiErrors] = useState([])
+  const [networkErrors, setNetworkErrors] = useState([])
 
   function getRandomTheme() {
-    const themeNames = Object.keys(themes);
-    return themeNames[Math.floor(Math.random() * themeNames.length)];
+    try {
+      const themeNames = Object.keys(themes);
+      if (themeNames.length === 0) {
+        console.warn('No themes available, using default');
+        return 'default';
+      }
+      return themeNames[Math.floor(Math.random() * themeNames.length)];
+    } catch (error) {
+      console.error('Error getting random theme:', error);
+      setErrors(prev => [...prev, `Theme loading error: ${error.message}`]);
+      return 'default';
+    }
   }
 
+  const addError = (error, type = 'general') => {
+    const errorMessage = typeof error === 'string' ? error : error.message || 'Unknown error';
+    const errorObj = {
+      message: errorMessage,
+      type,
+      timestamp: new Date().toISOString(),
+      details: typeof error === 'object' ? error : null
+    };
+    
+    setErrors(prev => [...prev, errorObj]);
+    console.error(`[${type}] ${errorMessage}`, error);
+  };
+
+  const addWarning = (warning, type = 'general') => {
+    const warningMessage = typeof warning === 'string' ? warning : warning.message || 'Unknown warning';
+    const warningObj = {
+      message: warningMessage,
+      type,
+      timestamp: new Date().toISOString(),
+      details: typeof warning === 'object' ? warning : null
+    };
+    
+    setWarnings(prev => [...prev, warningObj]);
+    console.warn(`[${type}] ${warningMessage}`, warning);
+  };
+
+  const clearErrors = () => {
+    setErrors([]);
+    setWarnings([]);
+    setApiErrors([]);
+    setNetworkErrors([]);
+    setError(null);
+  };
+
   useEffect(() => {
-    fetchTrendingSongs()
+    try {
+      fetchTrendingSongs();
+    } catch (error) {
+      addError(error, 'initialization');
+    }
   }, [])
 
   useEffect(() => {
-    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDarkMode(darkModeMediaQuery.matches);
-    updateCSSVariables(currentTheme, darkModeMediaQuery.matches);
+    try {
+      const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      setIsDarkMode(darkModeMediaQuery.matches);
+      updateCSSVariables(currentTheme, darkModeMediaQuery.matches);
 
-    const listener = (e) => { 
-      setIsDarkMode(e.matches);
-      updateCSSVariables(currentTheme, e.matches);
-    };
-    darkModeMediaQuery.addListener(listener);
-
-    return () => darkModeMediaQuery.removeListener(listener);
+      const listener = (e) => { 
+        try {
+          setIsDarkMode(e.matches);
+          updateCSSVariables(currentTheme, e.matches);
+        } catch (error) {
+          addError(error, 'theme');
+        }
+      };
+      
+      darkModeMediaQuery.addListener(listener);
+      return () => darkModeMediaQuery.removeListener(listener);
+    } catch (error) {
+      addError(error, 'theme-initialization');
+    }
   }, [currentTheme])  
 
   const handleSearch = async (query) => {
     try {
-      const response = await axios.post('/api/search', { songTitle: query });
+      if (!query || typeof query !== 'string' || query.trim().length === 0) {
+        addWarning('Search query is empty', 'search');
+        return [];
+      }
+
+      const response = await axios.post('/api/search', { songTitle: query.trim() });
+      
       if (response.data.success) {
-        return response.data.results;
+        if (response.data.warnings) {
+          response.data.warnings.forEach(warning => addWarning(warning, 'search-api'));
+        }
+        return response.data.results || [];
       } else {
-        console.error('Search failed:', response.data.message);
+        const errorMsg = response.data.message || 'Search failed for unknown reason';
+        addError(errorMsg, 'search-api');
         return [];
       }
     } catch (error) {
-      console.error('Error performing search:', error);
+      if (error.response) {
+        // Server responded with error status
+        const errorMsg = error.response.data?.message || `Server error: ${error.response.status}`;
+        addError(errorMsg, 'search-server');
+      } else if (error.request) {
+        // Network error
+        addError('Network error: Unable to connect to search service', 'network');
+      } else {
+        // Other error
+        addError(error.message || 'Unexpected search error', 'search');
+      }
       return [];
     }
   };
 
   const fetchTrendingSongs = async () => {
     try {
-      const response = await axios.get('/api/trending-songs')
-      setTrendingSongs(response.data.songs)
+      const response = await axios.get('/api/trending-songs');
+      
+      if (response.data.songs) {
+        setTrendingSongs(response.data.songs);
+        
+        // Handle warnings from API
+        if (response.data.warnings) {
+          response.data.warnings.forEach(warning => addWarning(warning, 'trending-songs'));
+        }
+        
+        // Show info if some songs failed to load
+        if (response.data.totalRequested && response.data.totalFetched) {
+          const failed = response.data.totalRequested - response.data.totalFetched;
+          if (failed > 0) {
+            addWarning(`${failed} trending songs could not be loaded`, 'trending-songs');
+          }
+        }
+      } else {
+        addError('No trending songs data received', 'trending-songs');
+        setTrendingSongs([]);
+      }
     } catch (error) {
-      console.error('Error fetching trending songs:', error)
+      console.error('Error fetching trending songs:', error);
+      
+      if (error.response) {
+        const errorData = error.response.data;
+        const errorMsg = errorData?.message || `Server error: ${error.response.status}`;
+        addError(errorMsg, 'trending-songs-server');
+        
+        // Add individual error details if available
+        if (errorData?.errors) {
+          errorData.errors.forEach(err => addError(err, 'trending-songs-detail'));
+        }
+      } else if (error.request) {
+        addError('Network error: Unable to load trending songs', 'network');
+      } else {
+        addError(error.message || 'Failed to load trending songs', 'trending-songs');
+      }
+      
+      setTrendingSongs([]);
     }
   }
 
   const handleSongSelection = async (result) => {
-    setSongTitle(result.title);
-    setArtistName(result.artist);
-    setSelectedSong(result);
-    await handleSubmit(null, result.title, result.artist);
+    try {
+      if (!result || !result.title || !result.artist) {
+        addError('Invalid song selection: Missing title or artist', 'song-selection');
+        return;
+      }
+
+      clearErrors(); // Clear previous errors when selecting new song
+      setSongTitle(result.title);
+      setArtistName(result.artist);
+      setSelectedSong(result);
+      await handleSubmit(null, result.title, result.artist);
+    } catch (error) {
+      addError(error, 'song-selection');
+    }
   };
 
   const updateCSSVariables = (themeName, isDark) => {
-    const root = document.documentElement;
-    const theme = themes[themeName][isDark ? 'dark' : 'light'];
-    Object.entries(theme).forEach(([key, value]) => {
-      root.style.setProperty(`--${key}`, value);
-    });
+    try {
+      if (!themes || !themes[themeName]) {
+        addWarning(`Theme "${themeName}" not found, using default`, 'theme');
+        return;
+      }
+
+      const root = document.documentElement;
+      const theme = themes[themeName][isDark ? 'dark' : 'light'];
+      
+      if (!theme) {
+        addWarning(`Theme variant not found for ${themeName}`, 'theme');
+        return;
+      }
+
+      Object.entries(theme).forEach(([key, value]) => {
+        if (key && value) {
+          root.style.setProperty(`--${key}`, value);
+        }
+      });
+    } catch (error) {
+      addError(error, 'theme');
+    }
   };
 
   const changeTheme = (newTheme, isDark) => {
-    setCurrentTheme(newTheme);
-    setIsDarkMode(isDark);
-    updateCSSVariables(newTheme, isDark);
+    try {
+      setCurrentTheme(newTheme);
+      setIsDarkMode(isDark);
+      updateCSSVariables(newTheme, isDark);
+    } catch (error) {
+      addError(error, 'theme-change');
+    }
   };
 
   const shuffleTheme = () => {
-    const newTheme = getRandomTheme();
-    changeTheme(newTheme, isDarkMode);
+    try {
+      const newTheme = getRandomTheme();
+      changeTheme(newTheme, isDarkMode);
+    } catch (error) {
+      addError(error, 'theme-shuffle');
+    }
   };
 
   const handleSubmit = async (e, title = songTitle, artist = artistName) => {
     if (e) e.preventDefault();
-    setLoading(true);
-    setSubmitted(false);
-    setError(null);
-
+    
     try {
-      console.log('Submitting form with:', { title, artist });
-      const [keywordsRes, analysisRes] = await Promise.all([
-        axios.post('/api/keywords', { songTitle: title, artistName: artist }),
-        axios.post('/api/analysis', { songTitle: title, artistName: artist })
-      ]);
+      // Validation
+      if (!title || !title.trim()) {
+        addError('Song title is required', 'validation');
+        return;
+      }
+      if (!artist || !artist.trim()) {
+        addError('Artist name is required', 'validation');
+        return;
+      }
 
-      setKeywordsResponse(keywordsRes.data.response)
-      setAnalysisResponse(analysisRes.data.overallAnalysis)
-      setYoutubeUrl(keywordsRes.data.youtubeUrl)
-      setMoodsAndThemes(keywordsRes.data.moodsAndThemes)
-      const themeNames = Object.keys(themes);
-      const randomTheme = themeNames[Math.floor(Math.random() * themeNames.length)];
-      changeTheme(randomTheme);
-      shuffleTheme()
+      setLoading(true);
+      setSubmitted(false);
+      setError(null);
+      clearErrors(); // Clear previous errors
 
-      setSubmitted(true);
+      console.log('Submitting form with:', { title: title.trim(), artist: artist.trim() });
+
+      // Make API calls with error handling
+      const apiCalls = [
+        axios.post('/api/keywords', { songTitle: title.trim(), artistName: artist.trim() })
+          .catch(error => {
+            addError(`Keywords API failed: ${error.response?.data?.message || error.message}`, 'keywords-api');
+            throw error;
+          }),
+        axios.post('/api/analysis', { songTitle: title.trim(), artistName: artist.trim() })
+          .catch(error => {
+            addError(`Analysis API failed: ${error.response?.data?.message || error.message}`, 'analysis-api');
+            throw error;
+          })
+      ];
+
+      try {
+        const [keywordsRes, analysisRes] = await Promise.all(apiCalls);
+
+        // Validate responses
+        if (keywordsRes?.data?.response) {
+          setKeywordsResponse(keywordsRes.data.response);
+        } else {
+          addWarning('Keywords data is incomplete or missing', 'keywords-data');
+          setKeywordsResponse('No keywords available');
+        }
+
+        if (analysisRes?.data?.overallAnalysis) {
+          setAnalysisResponse(analysisRes.data.overallAnalysis);
+        } else {
+          addWarning('Analysis data is incomplete or missing', 'analysis-data');
+          setAnalysisResponse('No analysis available');
+        }
+
+        // Handle optional data
+        if (keywordsRes?.data?.youtubeUrl) {
+          setYoutubeUrl(keywordsRes.data.youtubeUrl);
+        } else {
+          addWarning('YouTube URL not available', 'youtube-data');
+          setYoutubeUrl('');
+        }
+
+        if (keywordsRes?.data?.moodsAndThemes) {
+          setMoodsAndThemes(keywordsRes.data.moodsAndThemes);
+        } else {
+          addWarning('Moods and themes data not available', 'moods-data');
+        }
+
+        // Handle theme change
+        try {
+          const themeNames = Object.keys(themes);
+          if (themeNames.length > 0) {
+            const randomTheme = themeNames[Math.floor(Math.random() * themeNames.length)];
+            changeTheme(randomTheme);
+            shuffleTheme();
+          }
+        } catch (themeError) {
+          addWarning('Failed to change theme', 'theme');
+        }
+
+        setSubmitted(true);
+
+      } catch (apiError) {
+        // Handle partial failures
+        if (apiError.response) {
+          const status = apiError.response.status;
+          const message = apiError.response.data?.message || 'API request failed';
+          
+          if (status >= 500) {
+            addError(`Server error (${status}): ${message}`, 'server');
+          } else if (status >= 400) {
+            addError(`Client error (${status}): ${message}`, 'client');
+          } else {
+            addError(`API error (${status}): ${message}`, 'api');
+          }
+        } else if (apiError.request) {
+          addError('Network error: Unable to reach the server', 'network');
+        } else {
+          addError(`Request setup error: ${apiError.message}`, 'request');
+        }
+
+        // Set a generic error for UI
+        setError('Failed to analyze the song. Please try again.');
+      }
+
     } catch (error) {
-      console.error('Error occured:', error);
+      console.error('Unexpected error in handleSubmit:', error);
+      addError(`Unexpected error: ${error.message}`, 'unexpected');
+      setError('An unexpected error occurred. Please refresh the page and try again.');
     } finally {
       setLoading(false);
     }
@@ -192,6 +427,31 @@ export default function Home() {
         >
           <SearchBar onSearch={handleSearch} onSelect={handleSongSelection} selectedSong={selectedSong} />
         </motion.div>
+
+        {/* Error Display Section */}
+        {(errors.length > 0 || warnings.length > 0) && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-6"
+          >
+            <ErrorDisplay
+              errors={errors}
+              warnings={warnings}
+              title={errors.length > 0 ? "Issues Detected" : "Warnings"}
+              onRetry={() => {
+                clearErrors();
+                if (selectedSong) {
+                  handleSubmit(null, selectedSong.title, selectedSong.artist);
+                } else {
+                  fetchTrendingSongs();
+                }
+              }}
+              onDismiss={clearErrors}
+              showDetails={process.env.NODE_ENV === 'development'}
+            />
+          </motion.div>
+        )}
 
         <main className="mt-8">
           <AnimatePresence mode="wait">
