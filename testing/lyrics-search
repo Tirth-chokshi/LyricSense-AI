@@ -1,0 +1,5 @@
+#!/usr/bin/env node
+
+console.log("🎵 Starting Interactive Lyrics Search Tool...\n");
+
+require("./interactive_lyrics.js");
